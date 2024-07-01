@@ -255,6 +255,16 @@ class SurfexSuite:
                 "CycleInput", dtg_node, ecf_files, triggers=triggers
             )
             cycle_input_dtg_node.update({dtg_str: cycle_input})
+            if dtg.hour == 0 or dtg.hour == dtgs[0]:
+                prefetch = EcflowSuiteTask(
+                    "PrefetchMars",
+                    cycle_input,
+                    config,
+                    task_settings,
+                    ecf_files,
+                    input_template=template,
+                )
+                triggers =  EcflowSuiteTriggers([EcflowSuiteTrigger(prefetch)])
 
             forcing = EcflowSuiteTask(
                 "Forcing",
@@ -263,6 +273,7 @@ class SurfexSuite:
                 task_settings,
                 ecf_files,
                 input_template=template,
+                triggers=triggers
             )
             triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(forcing)])
             if config.get_value("forcing.modify_forcing"):
