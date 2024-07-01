@@ -48,6 +48,32 @@ hofxpath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@mbr@/SURFOUT.@YYYY_LL@
 obpath = "/hpcperm/fab0/sfx_data/nordic/observations/@YYYY@/@MM@/@DD@/@HH@/newob@YYYY@@MM@@DD@@HH@.json"
 station_location_file = "/perm/fab0/projects/cerise/obslocs.json"
 
+[forcing]
+pattern = "@sfx_exp_data@/grib/carra_@YYYY@@MM@@DD@T@HH@Z_@LLL@.grib2"
+input_format = "grib2"
+input_geo_file = ""
+zref = "ml"
+zval = "constant"
+uref = "screen"
+uval = "constant"
+qa_converter = "none"
+zsoro_converter = "none"
+rain_converter = "totalprec"
+snow_converter = "none"
+dir_sw_converter = "none"
+sca_sw_converter = "diff"
+sca_sw = "grib2"
+lw_converter = "none"
+co2 = "constant"
+wind_converter = "none"
+winddir_converter = "none"
+ps_converter = "none"
+debug = true
+timestep = 3600
+analysis = false
+modify_forcing = true
+interpolation = "bilinear"
+
 
 [SURFEX.IO]
 CTIMESERIES_FILETYPE = "NC"         # Fileformat for timseries. Inline runs use FA
