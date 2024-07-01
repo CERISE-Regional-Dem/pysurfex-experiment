@@ -57,7 +57,9 @@
     },
     "Forecast": {
        "BATCH": {
-          "WALLTIME": "#SBATCH --time=00:15:00"
+          "WALLTIME": "#SBATCH --time=00:15:00",
+          "MEMORY": "#SBATCH --mem=12G",
+          "CPUS": "#SBATCH --ntasks=4"
        },
        "ENV": {
           "MODULE": "print('My beautiful module')"
@@ -77,6 +79,18 @@
        "ENV":{
         "epygram": "import sys; sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13/epygram'); sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13/site'); sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13')"
       }
+    },
+    "ExternalAssim": {
+      "BATCH": {
+         "WALLTIME": "#SBATCH --time=00:10:00",
+         "MEMORY": "#SBATCH --mem=20G",
+         "CPUS": "#SBATCH --ntasks=2"
+       }
+    },
+    "ArchiveECFS": {
+      "BATCH": {
+         "WALLTIME": "#SBATCH --time=00:25:00"
+       }
     }
 
   }

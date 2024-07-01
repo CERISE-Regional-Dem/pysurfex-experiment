@@ -50,7 +50,7 @@ class PerturbForcing(AbstractTask):
         kwargs.update({"dtg_start": dtg.strftime("%Y%m%d%H")})
         kwargs.update({"dtg_stop": (dtg + fcint).strftime("%Y%m%d%H")})
         mbr = self.config.get_value("general.realization")
-        noise_cfg = self.platform.substitute(self.config.get_value("eps.config"))
+        cfg = self.platform.substitute(self.config.get_value("eps.offline.noise")).dict()
         forcing_dir = self.platform.get_system_value("forcing_dir")
         forcing_dir = self.platform.substitute(forcing_dir, basetime=self.dtg)
         input_forcing_dir = forcing_dir[:-4]
@@ -79,10 +79,8 @@ class PerturbForcing(AbstractTask):
 
         print(self.geo.nlats, self.geo.nlons)
 
-        with open(noise_cfg) as f:
-            cfg = json.load(f)
-
         print(input_forcing_file, output)
+
         if self.config.get_value("eps.pert_forcing") == True:
             print("call perturb atm forcing for mbr %s" % mbr)
             perturb_forcing(input_forcing_file, noise_file, output, cfg)

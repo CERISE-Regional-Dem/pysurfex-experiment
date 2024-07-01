@@ -636,7 +636,7 @@ class SurfexSuite:
                             triggers=triggers,
                             input_template=template)
                 da_this = False
-                if config.get_value("assim.do_assim") == True :  # and dtg.hour == 6:
+                if config.get_value("assim.general.do_assim") == True :  # and dtg.hour == 6:
                     da_this = True
                     prep = EcflowSuiteTask("ExternalAssim", ens_prep, config, task_settings, ecf_files,triggers=triggers, input_template=template)
 
@@ -654,8 +654,8 @@ class SurfexSuite:
                         args = "pert=" + str(m) + ";name=" + name
                         logger.debug("args: %s", args)
                         variables = {"ARGS": args, "ENSMBR": int(m)}
-                        pert = EcflowSuiteFamily(name, ens_prep, ecf_files, variables=variables)
-
+                        pert = EcflowSuiteFamily(name, ens_prep, ecf_files, variables=variables) 
+                        cpfg = EcflowSuiteTask("CopyFG", pert, config, task_settings, ecf_files, triggers=None, input_template=template) 
                         if pert_forcing:
                             EcflowSuiteTask("PerturbForcing", pert, config, task_settings, ecf_files,triggers=triggers, input_template=template)
                         if dtg == dtgbeg:
