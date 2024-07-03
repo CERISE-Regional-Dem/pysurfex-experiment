@@ -717,6 +717,7 @@ class SurfexSuite:
 
             log_pp_trigger = None
             obs_extract = EcflowSuiteTask("ObsExtract", pp_fam, config, task_settings, ecf_files,input_template=template)
+            fgint = settings.get_fgint(realization=realization)
 
             if len(ensmsel) > 0:
                 eps = EcflowSuiteFamily("ens_pp", pp_fam, ecf_files)
@@ -729,7 +730,7 @@ class SurfexSuite:
                     member = EcflowSuiteFamily(name, eps, ecf_files, variables=variables)
                     obs_extract = EcflowSuiteTask("ObsExtract", member, config, task_settings, ecf_files,input_template=template)
                     triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(obs_extract), EcflowSuiteTrigger(member)])
-                    if config.get_value("general.arhive_ecfs"):
+                    if config.get_value("general.arhive_ecfs") and (dtg + fgint).strftime("%w%H") == "000":
                         archive_ecfs = EcflowSuiteTask("ArchiveECFS", member, config, task_settings, ecf_files,input_template=template)
                         triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(archive_ecfs), EcflowSuiteTrigger(member)])
             if analysis is not None:
@@ -743,7 +744,7 @@ class SurfexSuite:
                 )
                 trigger = EcflowSuiteTrigger(qc2obsmon)
                 log_pp_trigger = EcflowSuiteTriggers(trigger)
-            if config.get_value("general.arhive_ecfs"):
+            if config.get_value("general.arhive_ecfs") and (dtg + fgint).strftime("%w%H") == "000":
                 archive_ecfs = EcflowSuiteTask("ArchiveECFS", pp_fam, config, task_settings, ecf_files,input_template=template)
 
 
