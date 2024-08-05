@@ -142,7 +142,7 @@ class Exp(ExpFromConfig):
                 "wrk": sfx_data + "/@YYYY@@MM@@DD@_@HH@/@RRR@/",
                 "bin_dir": sfx_data + "/lib/offline/exe/",
                 "climdir": sfx_data + "/climate/",
-                "archive_dir": sfx_data + "/archive/@YYYY@/@MM@/@DD@/@HH@/",
+                "archive_dir": sfx_data + "/archive/@YYYY@/@MM@/@DD@/@HH@/@RRR@/",
                 "extrarch_dir": sfx_data + "/archive/extract/",
                 "forcing_dir": sfx_data + "/forcing/@YYYY@@MM@@DD@@HH@/@RRR@/",
                 "obs_dir": f"{sfx_data}/archive/observations/@YYYY@/@MM@/@DD@/@HH@/",

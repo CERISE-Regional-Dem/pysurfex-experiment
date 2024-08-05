@@ -94,7 +94,7 @@ class SurfexBinaryTask(AbstractTask):
         xyz = ".exe"
         libdir = self.platform.get_system_value("sfx_exp_lib")
         xyz_file = libdir + "/xyz"
-        if os.path.exists(xyz_file):
+        if os.path.isfile(xyz_file):
             with open(xyz_file, mode="r", encoding="utf-8") as zyz_fh:
                 xyz = zyz_fh.read().rstrip()
         else:

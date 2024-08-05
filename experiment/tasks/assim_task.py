@@ -55,16 +55,21 @@ class ExternalAssim(AbstractTask):
         first_guess_dir = self.platform.substitute(archive_dir, basetime=self.fg_dtg)
         ana_dir = self.platform.substitute(archive_dir, basetime=self.dtg)
  
-        diag_file = self.platform.substitute("SURFOUT.@YYYY_LL@@MM_LL@@DD_LL@_@HH_LL@h00.nc",basetime=self.fg_dtg, validtime=self.dtg)
-        print("diag",diag_file)
-        obpattern = self.config.get_value("assim.obpath")
+        obpattern = self.config.get_value("assim.general.obpath")
         obpattern = self.platform.substitute(obpattern, basetime=self.dtg)
-        hofxpattern = self.config.get_value("assim.hofxpath")
+        hofxpattern = self.config.get_value("assim.general.hofxpath")
         print(hofxpattern)
         hofxpattern = self.platform.substitute(hofxpattern, basetime=self.dtg - self.fcint, validtime=self.dtg)
         bgpattern = first_guess_dir + "@mbr@/" + "SURFOUT" + self.suffix
         anpattern = ana_dir + "@mbr@/" + "ANALYSIS" + self.suffix
-        cfg_file = self.platform.substitute(self.config.get_value("assim.config"))
+        imp_r = self.config.get_value("assim.localization.horizontal_gp")
+        vert_d = self.config.get_value("assim.localization.vertical_m")
+        cfg_dict = self.config.get_value("assim.control").dict()
+        cfg_file = "cfg_assim.json" 
+        print(cfg_dict)
+        with open(cfg_file, "w") as f:
+            json.dump(cfg_dict, f)
+        #cfg_file = self.platform.substitute(self.config.get_value("assim.config"))
         print(bgpattern)
         print(anpattern)
         print("hofx",hofxpattern)
@@ -78,7 +83,8 @@ class ExternalAssim(AbstractTask):
             "nx": self.geo.nimax,
             "ny": self.geo.njmax,
             "dx": self.geo.xdx}
-        run_enkf(cfg_file, bgpattern, obpattern, anpattern, hofxpattern, nens, domain, imp_r=20, vert_d=200, write_cv=True)
+
+        run_enkf(cfg_file, bgpattern, obpattern, anpattern, hofxpattern, nens, domain, imp_r=imp_r, vert_d=vert_d, write_cv=True)
         
         for i in range(nens):
             fc_start_sfx = self.wrk + "%03d" % i + "/fc_start_sfx"
