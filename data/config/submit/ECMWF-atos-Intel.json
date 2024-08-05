@@ -59,10 +59,18 @@
       "ENV": {
          "APURGE": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('purge')",
          "OPENMPI0": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'prgenv/intel')",
-         "OPENMPI1": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'intel/2021.4.0'); module('load','intel-mkl/19.0.5'); module('load', 'intel-mpi/2021.4.0')",
          "ECCODES": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'ecmwf-toolbox')",
+         "OPENMPI1": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'intel/2021.4.0'); module('load','intel-mkl/19.0.5'); module('load', 'intel-mpi/2021.4.0')",
          "NETCDF": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'netcdf4/4.7.4')",
          "WALLTIME": "#SBATCH --time=01:30:00"
+      }
+    },
+    "PrefetchMars":{
+       "ENV":{
+        "ECCODES": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'ecmwf-toolbox')"
+      },
+      "BATCH": {
+        "WALLTIME": "#SBATCH --time=00:35:00"
       }
     },
       "Forecast": {
