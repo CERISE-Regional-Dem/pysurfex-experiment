@@ -134,6 +134,9 @@ SNOW = "3-L"                        # Type of snow scheme in SURFEX. Options: "D
 YSAND = "SAND_SOILGRID"             # Soil texture input data: "sand_fao.dir"|"SAND_HWSD_MOY_V2.dir"|"sand_SOILGRID.dir"
 YCLAY = "CLAY_SOILGRID"             # Soil texture input data: "clay_fao.dir"|"CLAY_HWSD_MOY_V2.dir"|"clay_SOILGRID.dir"
 
+[SURFEX.PARAMETERS]
+XRIMAX = 0.0                        # Maximum allowed Richardson number in the surface layer
+
 [SURFEX.ASSIM.SCHEMES]
 # SEA = "INPUT" not implemented offline yet
 SEA = "NONE"                         # Assimilation method for sea tile: "INPUT"|"NONE"
