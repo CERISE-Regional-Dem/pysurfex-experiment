@@ -58,6 +58,7 @@ class SurfexSuite:
         ecf_files = joboutdir
         os.makedirs(ecf_files, exist_ok=True)
         template = f"{platform.get_system_value('pysurfex_experiment')}/experiment/templates/ecflow/default.py"
+        dask_template = f"{platform.get_system_value('pysurfex_experiment')}/experiment/templates/ecflow/dask.py"
         ecf_home = joboutdir
         ecf_out = joboutdir
         ecf_jobout = joboutdir + "/%ECF_NAME%.%ECF_TRYNO%"
@@ -638,8 +639,8 @@ class SurfexSuite:
                 da_this = False
                 if config.get_value("assim.general.do_assim") == True :  # and dtg.hour == 6:
                     da_this = True
-                    prep = EcflowSuiteTask("ExternalAssim", ens_prep, config, task_settings, ecf_files,triggers=triggers, input_template=template)
-
+                    prep = EcflowSuiteTask("ExternalAssim", ens_prep, config, task_settings, ecf_files,triggers=triggers, input_template=dask_template)
+                    
                 else:
                     prep = EcflowSuiteTask("CycleFirstGuess", ens_prep, config, task_settings, ecf_files,triggers=triggers, input_template=template)
                 if pert_forcing:
