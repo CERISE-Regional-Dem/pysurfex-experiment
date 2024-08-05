@@ -34,7 +34,7 @@ SubmitTask = "experiment.cli:run_submit_cmd_exp"
     troika = {git = "https://git.ecmwf.int/scm/ecsdk/troika.git", tag="0.1.8"}
     pysurfex = {git = "https://github.com/metno/pysurfex.git", develop=true, branch="master", extras=["points", "formats"]}
     loguru = "^0.7.2"
-    sfcpert = {git = "git@github.com:asmundb/sfcpert.git", develop = true}
+    sfcpert = {git = "git@github.com:CERISE-Regional-Dem/sfcpert.git", develop = true}
 
 [tool.poetry.group.dev.dependencies]
     jupyterlab = "^3.6.1"
