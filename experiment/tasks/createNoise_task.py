@@ -53,9 +53,7 @@ class createNoise(AbstractTask):
         dtg = self.dtg
         fcint = self.fcint
         dtg_prev = self.dtg - fcint
-        #for key in self.config.dict():
-        #    print(key,self.config.get_value(key))
-        noise_cfg = self.platform.substitute(self.config.get_value("eps.config"))
+        cfg = self.config.get_value("eps.offline.noise").dict(descend_recursively=False)
         dt = self.config.get_value("forcing.timestep")
         nens = len(self.config.get_value("forecast.ensmsel"))
         tau = self.config.get_value("eps.tau")       #24.0 # decorrelation time
@@ -68,9 +66,6 @@ class createNoise(AbstractTask):
             N = f.dimensions["Number_of_points"].size
             T = f.dimensions["time"].size
 
-        with open(noise_cfg) as f:
-            cfg = json.load(f)
-        print(cfg)
         for i in range(nens):
             noisefile_in = input_dir + "%03d/noise_%03d.nc" % (i, i)
             if not os.path.isfile(noisefile_in):
