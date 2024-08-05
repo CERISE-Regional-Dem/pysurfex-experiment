@@ -9,7 +9,11 @@ from netCDF4 import Dataset
 import numpy as np
 import subprocess
 from experiment.tasks import AbstractTask
-import eccodes as ec
+
+try:
+    import eccodes as ec
+except:
+    print("eccodes not loaded")
 
 
 class PrefetchMars(AbstractTask):
