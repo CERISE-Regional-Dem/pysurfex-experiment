@@ -22,7 +22,8 @@ class Forcing(AbstractTask):
         AbstractTask.__init__(self, config, "Forcing")
         self.var_name = self.config.get_value("task.var_name")
         try:
-            user_config = self.config.get_value("task.forcing_user_config")
+            #user_config = self.config.get_value("task.forcing_user_config")
+            user_config = self.platform.substitute(self.config.get_value("forcing.user_config"))
         except AttributeError:
             user_config = None
         self.user_config = user_config
@@ -66,7 +67,9 @@ class Forcing(AbstractTask):
         kwargs.update({"of": output})
         kwargs.update({"output_format": output_format})
 
-        pattern = self.config.get_value("forcing.pattern")
+        pattern = self.config.get_value("forcing.pattern").replace("@sfx_exp_data@", 
+                    self.config.get_value("system.sfx_exp_data"))
+        
         input_format = self.config.get_value("forcing.input_format")
         kwargs.update({"geo_input_file": self.config.get_value("forcing.input_geo_file")})
         zref = self.config.get_value("forcing.zref")

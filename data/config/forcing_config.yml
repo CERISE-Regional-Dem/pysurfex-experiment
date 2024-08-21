@@ -1,0 +1,318 @@
+# General grib2 settings
+grib2:
+  filepattern: not_defined
+  offset: 0
+  fcint: 10800
+  interpolator: bilinear
+  typeOfStatisticalProcessing: -1
+# Orography
+ZS:
+  grib2:
+    converter:
+      none:
+        discipline: 0
+        parameterCategory: 3
+        parameterNumber: 5
+        levelType: 1
+        level: 0
+      phi2m:
+        phi:
+          discipline: 0
+          parameterCategory: 3
+          parameterNumber: 4
+          levelType: 103
+          level: 0
+# Reference height Z
+ZREF:
+  ml:
+    grib2:
+      converter:
+        none:
+          discipline: 0
+          parameterCategory: 0
+          parameterNumber: 0
+          levelType: 105
+          level: 65
+
+
+# Temperature
+TA:
+  screen:
+    grib2:
+      converter:
+        none:
+          discipline: 0
+          parameterCategory: 0
+          parameterNumber: 0
+          levelType: 103
+          level: 2
+  ml:
+    grib2:
+      converter:
+        none:
+          discipline: 0
+          parameterCategory: 0
+          parameterNumber: 0
+          levelType: 105
+          level: 65
+
+# Specific humidity
+QA:
+  screen:
+    grib2:
+      converter:
+        none:
+          discipline: 0
+          parameterCategory: 1
+          parameterNumber: 0
+          levelType: 103
+          level: 0
+        rh2q:
+          rh:
+            discipline: 0
+            parameterCategory: 1
+            parameterNumber: 192
+            levelType: 103
+            level: 2
+          t:
+            discipline: 0
+            parameterCategory: 0
+            parameterNumber: 0
+            levelType: 103
+            level: 2
+          p:
+            discipline: 0
+            parameterCategory: 3
+            parameterNumber: 0
+            levelType: 103
+            level: 0
+  ml:
+    grib2:
+      converter:
+        none:
+          discipline: 0
+          parameterCategory: 1
+          parameterNumber: 0
+          levelType: 105
+          level: 65
+        rh2q:
+          rh:
+            discipline: 0
+            parameterCategory: 1
+            parameterNumber: 192
+            levelType: 105
+            level: 65
+          t:
+            discipline: 0
+            parameterCategory: 0
+            parameterNumber: 0
+            levelType: 105
+            level: 65
+          p:
+            discipline: 0
+            parameterCategory: 3
+            parameterNumber: 0
+            levelType: 103
+            level: 0
+
+# Wind speed
+WIND:
+  screen:
+    grib2:
+      converter:
+        none:
+          discipline: 0
+          parameterCategory: 2
+          parameterNumber: 1
+          levelType: 103
+          level: 10
+        windspeed:
+          x:
+            discipline: 0
+            parameterCategory: 2
+            parameterNumber: 2
+            levelType: 103
+            level: 10
+          y:
+            discipline: 0
+            parameterCategory: 2
+            parameterNumber: 3
+            levelType: 103
+            level: 10
+  ml:
+    grib2:
+      converter:
+        none:
+          discipline: 0
+          parameterCategory: 2
+          parameterNumber: 1
+          levelType: 105
+          level: 65
+        windspeed:
+          x:
+            discipline: 0
+            parameterCategory: 2
+            parameterNumber: 2
+            levelType: 105
+            level: 65
+          y:
+            discipline: 0
+            parameterCategory: 2
+            parameterNumber: 3
+            levelType: 105
+            level: 65
+
+# Wind direction
+WIND_DIR:
+  screen:
+    grib2:
+      converter:
+        none:
+          discipline: 0
+          parameterCategory: 2
+          parameterNumber: 1
+          levelType: 103
+          level: 10
+        winddir:
+          x:
+            discipline: 0
+            parameterCategory: 2
+            parameterNumber: 2
+            levelType: 103
+            level: 10
+            rotate_to_geographic: True
+          y:
+            discipline: 0
+            parameterCategory: 2
+            parameterNumber: 3
+            levelType: 103
+            level: 10
+            rotate_to_geographic: True
+  ml:
+    grib2:
+      converter:
+        none:
+          discipline: 0
+          parameterCategory: 2
+          parameterNumber: 0
+          levelType: 105
+          level: 65
+        winddir:
+          x:
+            discipline: 0
+            parameterCategory: 2
+            parameterNumber: 2
+            levelType: 105
+            level: 65
+            rotate_to_geographic: True
+          y:
+            discipline: 0
+            parameterCategory: 2
+            parameterNumber: 3
+            levelType: 105
+            level: 65
+            rotate_to_geographic: True
+
+# Rainfall rate
+RAIN:
+  grib2:
+    converter:
+      none:
+        discipline: 0
+        parameterCategory: 1
+        parameterNumber: 65
+        levelType: 103
+        level: 0
+        instant: 3600.
+        typeOfStatisticalProcessing: 1
+      totalprec:
+        totalprec:
+          discipline: 0
+          parameterCategory: 1
+          parameterNumber: 52
+          levelType: 1
+          level: 0
+          instant: 3600.
+          typeOfStatisticalProcessing: 1
+        snow:
+          discipline: 0
+          parameterCategory: 1
+          parameterNumber: 128
+          levelType: 1
+          level: 0
+          instant: 3600.
+          typeOfStatisticalProcessing: 1
+
+# Snow fall amount rate
+SNOW:
+  grib2:
+    converter:
+      none:
+        discipline: 0
+        parameterCategory: 1
+        parameterNumber: 128
+        levelType: 1
+        level: 0
+        instant: 3600.
+        typeOfStatisticalProcessing: 1
+
+# Surface air pressure
+PS:
+  grib2:
+    converter:
+      none:
+        discipline: 0
+        parameterCategory: 3
+        parameterNumber: 0
+        levelType: 1
+        level: 0
+
+# Direct shortwave radiation
+DIR_SW:
+  grib2:
+    converter:
+      none:
+        discipline: 0
+        parameterCategory: 4
+        parameterNumber: 13
+        levelType: 1
+        level: 0
+        instant: 3600.
+        typeOfStatisticalProcessing: 1
+
+# Direct scattered radiation
+SCA_SW:
+  grib2:
+    converter:
+      none:
+      diff:
+        field1:
+          discipline: 0
+          parameterCategory: 4
+          parameterNumber: 7
+          levelType: 1
+          level: 0
+          instant: 3600.
+          typeOfStatisticalProcessing: 1
+        field2:
+          discipline: 0
+          parameterCategory: 4
+          parameterNumber: 13
+          levelType: 1
+          level: 0
+          instant: 3600.
+          typeOfStatisticalProcessing: 1
+
+# Long wave radiation
+LW:
+  grib2:
+    converter:
+      none:
+        discipline: 0
+        parameterCategory: 5
+        parameterNumber: 3
+        levelType: 1
+        level: 0
+        instant: 3600.
+        typeOfStatisticalProcessing: 1
+

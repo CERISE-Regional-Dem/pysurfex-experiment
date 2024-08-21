@@ -297,6 +297,19 @@ class ExpFromFiles(Exp):
                 }
                 domain = self.merge_dict(domain_from_file, domain)
                 config_settings.update({"domain": domain})
+            elif all(key in domain for key in [
+                "nimax", 
+                "njmax", 
+                "xloncen", 
+                "xlatcen", 
+                "xdx", 
+                "xdy", 
+                "ilone", 
+                "ilate", 
+                "xlon0", 
+                "xlat0"
+                ]):
+                pass
             else:
                 raise KeyError("Domain definition not found")
 

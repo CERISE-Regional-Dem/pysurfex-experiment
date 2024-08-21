@@ -5,6 +5,20 @@ arhive_ecfs = true
 ecfs_pattern = "ec:sfx_data/@case@/@YYYY@/"
 archive_hours = ["00", "03", "06", "09", "12", "15", "18", "21"]
 
+[domain]
+name = "AROME_ARCTIC_ML"
+nimax = 300
+njmax = 450
+xloncen = 21.5
+xlatcen = 67.7
+xdx = 2500.0
+xdy = 2500.0
+ilone = 11
+ilate = 11
+xlon0 = -25.0
+xlat0 = 77.5
+
+
 [initial_conditions]
 prep_input_file = ""
 prep_pgdfile = ""
@@ -118,6 +132,7 @@ vertical_m = 200
 
 [forcing]
 pattern = "@sfx_exp_data@/grib/carra_@YYYY@@MM@@DD@T@HH@Z_@LLL@.grib2"
+user_config = "@pysurfex_experiment@/data/config/forcing_config.yml"
 input_format = "grib2"
 input_geo_file = ""
 zref = "ml"
