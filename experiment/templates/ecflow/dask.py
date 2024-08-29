@@ -1,9 +1,10 @@
 """Default ecflow container."""
 # @ENV_SUB1@
 from dask.distributed import Client, LocalCluster
-from experiment.config_parser import ParsedConfig
+from experiment import PACKAGE_NAME
+from experiment.config_parser import MAIN_CONFIG_JSON_SCHEMA, ParsedConfig
 from experiment.datetime_utils import ecflow2datetime_string
-from experiment.logs import get_logger_from_config
+from experiment.logs import GLOBAL_LOGLEVEL, LoggerHandlers, logger
 from experiment.scheduler.scheduler import (
     EcflowClient,
     EcflowServerFromConfig,
@@ -12,6 +13,9 @@ from experiment.scheduler.scheduler import (
 from experiment.tasks.discover_tasks import get_task
 
 # @ENV_SUB2@
+
+
+logger.enable(PACKAGE_NAME)
 
 
 def parse_ecflow_vars():
@@ -41,10 +45,18 @@ def parse_ecflow_vars():
 
 def default_main(**kwargs):
     """Ecflow container default method."""
-    config = ParsedConfig.from_file(kwargs.get("CONFIG"))
-    update = {"general": {"loglevel": kwargs.get("LOGLEVEL")}}
-    config = config.copy(update=update)
-    logger = get_logger_from_config(config)
+    config = kwargs.get("CONFIG")
+    config = ParsedConfig.from_file(config, json_schema=MAIN_CONFIG_JSON_SCHEMA)
+
+    # Reset loglevel according to (in order of priority):
+    #     (a) Configs in ECFLOW UI
+    #     (b) What was originally set in the config file
+    #     (c) The default `GLOBAL_LOGLEVEL` if none of the above is found.
+    loglevel = kwargs.get(
+        "LOGLEVEL", config.get_value("general.loglevel", GLOBAL_LOGLEVEL)
+    ).upper()
+    logger.configure(handlers=LoggerHandlers(default_level=loglevel))
+    logger.info("Loglevel={}", loglevel)
 
     ecf_name = kwargs.get("ECF_NAME")
     ecf_pass = kwargs.get("ECF_PASS")
@@ -53,17 +65,17 @@ def default_main(**kwargs):
     task = EcflowTask(ecf_name, ecf_tryno, ecf_pass, ecf_rid)
     scheduler = EcflowServerFromConfig(config)
 
-    # This will also handle call to sys.exit(), i.e. Client.__exit__ will still be called.
+    # This will also handle call to sys.exit(), i.e. Client._   _exit__ will still be called.
     with EcflowClient(scheduler, task):
         task_name = kwargs.get("TASK_NAME")
-        logger.info("Running task %s", task_name)
+        logger.info("Running task {}", task_name)
         args = kwargs.get("ARGS")
         args_dict = {}
         if args != "":
-            logger.debug("args=%s", args)
+            logger.debug("args={}", args)
             for arg in args.split(";"):
                 parts = arg.split("=")
-                logger.debug("arg=%s parts=%s len(parts)=%s", arg, parts, len(parts))
+                logger.debug("arg={} parts={} len(parts)={}", arg, parts, len(parts))
                 if len(parts) == 2:
                     args_dict.update({parts[0]: parts[1]})
 
@@ -85,7 +97,7 @@ def default_main(**kwargs):
         }
         config = config.copy(update=update)
         get_task(task.ecf_task, config).run()
-        logger.info("Finished task %s", task_name)
+        logger.info("Finished task {}", task_name)
 
 
 if __name__ == "__main__":

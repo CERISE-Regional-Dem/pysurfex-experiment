@@ -648,10 +648,11 @@ class SurfexSuite:
                             triggers=triggers,
                             input_template=template)
                 da_this = False
-                if config.get_value("assim.general.do_assim") == True :  # and dtg.hour == 6:
+                if config.get_value("assim.general.do_assim") == True and dtg > dtgbeg:  # and dtg.hour == 6:
                     da_this = True
                     prep = EcflowSuiteTask("ExternalAssim", ens_prep, config, task_settings, ecf_files,triggers=triggers, input_template=dask_template)
-                    
+                elif dtg == dtgbeg:
+                    pass
                 else:
                     prep = EcflowSuiteTask("CycleFirstGuess", ens_prep, config, task_settings, ecf_files,triggers=triggers, input_template=template)
                 if pert_forcing:
@@ -667,12 +668,12 @@ class SurfexSuite:
                         logger.debug("args: %s", args)
                         variables = {"ARGS": args, "ENSMBR": int(m)}
                         pert = EcflowSuiteFamily(name, ens_prep, ecf_files, variables=variables) 
-                        cpfg = EcflowSuiteTask("CopyFG", pert, config, task_settings, ecf_files, triggers=None, input_template=template) 
                         if pert_forcing:
                             EcflowSuiteTask("PerturbForcing", pert, config, task_settings, ecf_files,triggers=triggers, input_template=template)
                         if dtg == dtgbeg:
                             prep = EcflowSuiteTask("Prep", pert, config, task_settings, ecf_files,input_template=template)
                         else:
+                            cpfg = EcflowSuiteTask("CopyFG", pert, config, task_settings, ecf_files, triggers=None, input_template=template)   
                             if not da_this:
                                 prep = EcflowSuiteTask("CycleFirstGuess", pert, config, task_settings, ecf_files,triggers=triggers, input_template=template)
                                 #triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(prep)])

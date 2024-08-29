@@ -7,6 +7,7 @@
   "ecoclimap_cover_dir": "/ec/res4/hpcperm/hlam/data/climate/PGD/",
   "ecoclimap_bin_dir": "/scratch/sbu/sfx_data/test_default/lib/offline/MY_RUN/ECOCLIMAP",
   "pgd_data_path": "/ec/res4/hpcperm/hlam/data/climate/PGD/",
+  "flake_dir": "/ec/res4/hpcperm/hlam/data/climate/PGD/",
   "gmted2010_data_path": "/ec/res4/hpcperm/hlam/data/climate/GMTED2010/",
   "soilgrid_data_path": "/ec/res4/hpcperm/hlam/data/climate/SOILGRID/",
   "ecosg_data_path": "/ec/res4/hpcperm/hlam/data/climate/ECOCLIMAP-SG/",
