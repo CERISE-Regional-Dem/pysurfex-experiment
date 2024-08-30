@@ -650,7 +650,7 @@ class SurfexSuite:
                 da_this = False
                 if config.get_value("assim.general.do_assim") == True and dtg > dtgbeg:  # and dtg.hour == 6:
                     da_this = True
-                    prep = EcflowSuiteTask("ExternalAssim", ens_prep, config, task_settings, ecf_files,triggers=triggers, input_template=dask_template)
+                    prep = EcflowSuiteTask("ExternalAssim", ens_prep, config, task_settings, ecf_files,triggers=triggers, input_template=template)
                 elif dtg == dtgbeg:
                     pass
                 else:

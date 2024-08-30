@@ -158,6 +158,7 @@ modify_forcing = true
 interpolation = "bilinear"
 
 [SURFEX.IO]
+CSURF_FILETYPE = "FA"
 CTIMESERIES_FILETYPE = "NC"         # Fileformat for timseries. Inline runs use FA
 LSELECT = false                     # Only write selected diagnostics
 XTSTEP_OUTPUT = 10800.0             # Output interval from the binary OFFLINE
