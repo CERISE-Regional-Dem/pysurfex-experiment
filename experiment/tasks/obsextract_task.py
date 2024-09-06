@@ -12,7 +12,7 @@ from experiment.tasks import AbstractTask
 
 
 class ObsExtract(AbstractTask):
-    """Perturb state task."""
+    """Extract observations task."""
 
     def __init__(self, config):
         """Construct assim task.
