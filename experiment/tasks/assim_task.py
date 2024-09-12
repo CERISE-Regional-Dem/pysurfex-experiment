@@ -11,6 +11,10 @@ from sfcpert.letkf_exp import run_enkf
 from experiment.tasks import AbstractTask
 
 
+# Hack for epygram
+np.str = str
+np.bool = bool
+
 class ExternalAssim(AbstractTask):
     """Perturb state task."""
 
@@ -84,7 +88,22 @@ class ExternalAssim(AbstractTask):
             "ny": self.geo.njmax,
             "dx": self.geo.xdx}
 
-        run_enkf(cfg_file, bgpattern, obpattern, anpattern, hofxpattern, nens, domain, imp_r=imp_r, vert_d=vert_d, write_cv=True)
+        csurf_filetype = self.config.get_value("SURFEX.IO.CSURF_FILETYPE").lower()
+        pgdfile = self.config.get_value("system.climdir") + "/PGD." + csurf_filetype
+        print("PGD:", pgdfile)
+
+        run_enkf(cfg_file, 
+                bgpattern, 
+                obpattern, 
+                anpattern, 
+                hofxpattern, 
+                nens, 
+                domain, 
+                imp_r=imp_r, 
+                vert_d=vert_d, 
+                write_cv=True, 
+                topofile=pgdfile,
+                filetype=csurf_filetype)
         
         for i in range(nens):
             fc_start_sfx = self.wrk + "%03d" % i + "/fc_start_sfx"

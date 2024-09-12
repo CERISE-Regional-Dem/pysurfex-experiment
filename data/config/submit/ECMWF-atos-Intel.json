@@ -5,7 +5,7 @@
     "SCHOST": "localhost",
     "ENV": {
        "MODULE_UDUNITS": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'udunits/2.2.28'); os.environ['LD_LIBRARY_PATH']=os.environ.get('UDUNITS_DIR') + '/lib/'",
-       "MODULE_PROJ": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'proj/9.3.1')"
+       "MODULE_PROJ": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'proj/9.1.1')"
     },
     "tasks": [
       "Background", "Dummy"
@@ -15,8 +15,8 @@
     "SCHOST": "hpc",
     "ENV": {
       "MODULE_UDUNITS": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'udunits/2.2.28'); os.environ['LD_LIBRARY_PATH']='/usr/local/apps/udunits/2.2.28/lib/'",
-      "MODULE_GDAL": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'gdal/3.8.4')",
-      "MODULE_PROJ": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'proj/9.3.1')"
+      "MODULE_GDAL": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'gdal/3.6.2')",
+      "MODULE_PROJ": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'proj/9.1.1')"
     },
     "HOST": "0",
     "BATCH": {
@@ -28,7 +28,7 @@
     "ENV": {
        "APURGE": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('purge')",
        "MODULE_UDUNITS": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'udunits/2.2.28'); os.environ['LD_LIBRARY_PATH']=os.environ.get('UDUNITS_DIR') + '/lib/'",
-       "MODULE_PROJ": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'proj/9.3.1')",
+       "MODULE_PROJ": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'proj/9.1.1')",
        "OPENMPI0": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'prgenv/intel')",
        "OPENMPI1": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'intel/2021.4.0'); module('load','intel-mkl/19.0.5'); module('load', 'intel-mpi/2021.4.0')",
        "OMP_NUM_THREADS": "import os; os.environ['OMP_NUM_THREADS']='1';"
@@ -93,16 +93,19 @@
     },
     "Forcing":{
        "ENV":{
-           "EPYGRAM": "import sys; sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13/epygram'); sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13/site'); sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13')",
+           "EPYGRAM": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('use', '/perm/hlam/apps/modulefiles/lmod'); module('load', 'epygram'); import sys; sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13/epygram'); sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13/site'); sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13')",
            "ECCODES": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'ecmwf-toolbox')"
       }
     },
     "ModifyForcing":{
        "ENV":{
-        "epygram": "import sys; sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13/epygram'); sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13/site'); sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13')"
+        "epygram": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('use', '/perm/hlam/apps/modulefiles/lmod'); module('load', 'epygram'); import sys; sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13/epygram'); sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13/site'); sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13')"
       }
     },
     "ExternalAssim": {
+      "ENV": {
+        "epygram": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('use', '/perm/hlam/apps/modulefiles/lmod'); module('load', 'epygram'); import sys; sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13/epygram'); sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13/site'); sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13')"
+      },
       "BATCH": {
          "WALLTIME": "#SBATCH --time=00:10:00",
          "MEMORY": "#SBATCH --mem=20G",
