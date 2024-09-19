@@ -336,9 +336,9 @@ class SurfexSuite:
                         triggers=triggers,
                         input_template=template,
                     )
-                else:
-                    fg_task = EcflowSuiteTask(
-                        "FirstGuess",
+                elif config.get_value("assim.general.do_assim") == True:
+                    EcflowSuiteTask(
+                        "CycleFirstGuess",
                         initialization,
                         config,
                         task_settings,
@@ -494,16 +494,33 @@ class SurfexSuite:
                                 an_variables.update({"sd": True})
                                 need_obs = True
 
-                    analysis = EcflowSuiteFamily("Analysis", initialization, ecf_files)
-                    fg4oi = EcflowSuiteTask(
-                        "FirstGuess4OI",
-                        analysis,
-                        config,
-                        task_settings,
-                        ecf_files,
-                        input_template=template,
-                    )
-                    fg4oi_complete = EcflowSuiteTrigger(fg4oi)
+                    #analysis = EcflowSuiteFamily("Analysis", initialization, ecf_files)
+                    if config.get_value("assim.general.do_assim") != True:
+                        analysis = EcflowSuiteFamily("Analysis", initialization, ecf_files)
+                        fg4oi = EcflowSuiteTask(
+                            "FirstGuess4OI",
+                            analysis,
+                            config,
+                            task_settings,
+                            ecf_files,
+                            input_template=template,
+                        )
+                        fg4oi_complete = EcflowSuiteTrigger(fg4oi)
+                
+                    elif config.get_value("assim.general.do_assim") == True:
+                        analysis = EcflowSuiteFamily("Prepare_obs", initialization, ecf_files)
+                        fg4oi = EcflowSuiteTask(
+                            "FirstGuess4OI",
+                            analysis,
+                            config,
+                            task_settings,
+                            ecf_files,
+                            input_template=template,
+                        )
+                        fg4oi_complete = EcflowSuiteTrigger(fg4oi)
+                    else:
+                        fg4oi_complete = EcflowSuiteTrigger(fg_task)
+                        pass
 
                     cryo_obs_sd = config.get_value("observations.cryo_obs_sd")
                     cryo2json_complete = fg4oi_complete
@@ -563,37 +580,39 @@ class SurfexSuite:
                             oi_triggers = EcflowSuiteTriggers(
                                 [EcflowSuiteTrigger(qc_task), EcflowSuiteTrigger(fg4oi)]
                             )
-                            EcflowSuiteTask(
-                                "OptimalInterpolation",
-                                an_var_fam,
+                            if config.get_value("assim.general.do_assim") != True:
+                                EcflowSuiteTask(
+                                    "OptimalInterpolation",
+                                    an_var_fam,
+                                    config,
+                                    task_settings,
+                                    ecf_files,
+                                    triggers=oi_triggers,
+                                    input_template=template,
+                                )
+                                triggers.append(EcflowSuiteTrigger(an_var_fam))
+                            else:                          
+                                triggers.append(EcflowSuiteTrigger(an_var_fam))
+
+                    if config.get_value("assim.general.do_assim") != True:
+                        oi2soda_complete = None
+                        if len(triggers) > 0:
+                            triggers = EcflowSuiteTriggers(triggers)
+                            oi2soda = EcflowSuiteTask(
+                                "Oi2soda",
+                                analysis,
                                 config,
                                 task_settings,
                                 ecf_files,
-                                triggers=oi_triggers,
+                                triggers=triggers,
                                 input_template=template,
                             )
-                            triggers.append(EcflowSuiteTrigger(an_var_fam))
+                            oi2soda_complete = EcflowSuiteTrigger(oi2soda)
+                        
 
-                    oi2soda_complete = None
-                    if len(triggers) > 0:
-                        triggers = EcflowSuiteTriggers(triggers)
-                        oi2soda = EcflowSuiteTask(
-                            "Oi2soda",
-                            analysis,
-                            config,
-                            task_settings,
-                            ecf_files,
-                            triggers=triggers,
-                            input_template=template,
-                        )
-                        oi2soda_complete = EcflowSuiteTrigger(oi2soda)
-
-                    prepare_lsm = None
-                    need_lsm = False
-                    if settings.setting_is("SURFEX.ASSIM.SCHEMES.ISBA", "OI"):
-                        need_lsm = True
-                    if settings.setting_is("SURFEX.ASSIM.SCHEMES.INLAND_WATER", "WATFLX"):
-                        if config.get_value("SURFEX.ASSIM.INLAND_WATER.LEXTRAP_WATER"):
+                        prepare_lsm = None
+                        need_lsm = False
+                        if settings.setting_is("SURFEX.ASSIM.SCHEMES.ISBA", "OI"):
                             need_lsm = True
                     if need_lsm:
                         triggers = EcflowSuiteTriggers(fg4oi_complete)
@@ -619,16 +638,17 @@ class SurfexSuite:
                     if prepare_lsm is not None:
                         triggers.append(EcflowSuiteTrigger(prepare_lsm))
 
-                    triggers = EcflowSuiteTriggers(triggers)
-                    EcflowSuiteTask(
-                        "Soda",
-                        analysis,
-                        config,
-                        task_settings,
-                        ecf_files,
-                        triggers=triggers,
-                        input_template=template,
-                    )
+                        triggers = EcflowSuiteTriggers(triggers)
+                        if config.get_value("assim.general.do_assim") != True:
+                            EcflowSuiteTask(
+                                "Soda",
+                                analysis,
+                                config,
+                                task_settings,
+                                ecf_files,
+                                triggers=triggers,
+                                input_template=template,
+                            )
 
             triggers = EcflowSuiteTriggers(
                 [EcflowSuiteTrigger(cycle_input), EcflowSuiteTrigger(initialization)]

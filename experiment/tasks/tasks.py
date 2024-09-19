@@ -311,7 +311,7 @@ class QualityControl(AbstractTask):
                         "bufr": {
                             "filepattern": filepattern,
                             "filetype": "bufr",
-                            "varname": "airTemperatureAt2M",
+                            "varname": ["airTemperatureAt2M"],
                             "tests": bufr_tests,
                         }
                     }
@@ -354,7 +354,7 @@ class QualityControl(AbstractTask):
                         "bufr": {
                             "filepattern": filepattern,
                             "filetype": "bufr",
-                            "varname": "relativeHumidityAt2M",
+                            "varname": ["relativeHumidityAt2M"],
                             "tests": bufr_tests,
                         }
                     }
@@ -402,7 +402,7 @@ class QualityControl(AbstractTask):
                         "bufr": {
                             "filepattern": filepattern,
                             "filetype": "bufr",
-                            "varname": "totalSnowDepth",
+                            "varname": ["totalSnowDepth"],
                             "tests": bufr_tests,
                         }
                     }
