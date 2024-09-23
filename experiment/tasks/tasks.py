@@ -839,10 +839,22 @@ class FirstGuess4OI(AbstractTask):
         """
         AbstractTask.__init__(self, config, "FirstGuess4OI")
         self.var_name = self.config.get_value("task.var_name")
+        try:
+            user_config = self.platform.substitute(self.config.get_value("initial_conditions.fg4oi.user_config"))
+        except AttributeError:
+            user_config = None
+        self.user_config = user_config
 
     def execute(self):
         """Execute."""
         validtime = self.dtg
+
+        kwargs = {}
+        if self.user_config is not None:
+            user_config = yaml.safe_load(
+                open(self.user_config, mode="r", encoding="utf-8")
+            )
+            kwargs.update({"user_config": user_config})
 
         extra = ""
         symlink_files = {}
@@ -949,9 +961,17 @@ class FirstGuess4OI(AbstractTask):
             logger.info("inputfile={}, fileformat={}", inputfile, fileformat)
             logger.info("converter={}, input_geo_file={}", converter, input_geo_file)
 
-            config_file = self.platform.get_system_value("first_guess_yml")
-            with open(config_file, mode="r", encoding="utf-8") as file_handler:
-                config = yaml.safe_load(file_handler)
+            if self.user_config is not None:
+                config_file = self.user_config
+                with open(config_file, mode="r", encoding="utf-8") as file_handler:
+                    config = yaml.safe_load(file_handler)
+            else:
+
+                config_file = self.platform.get_system_value("first_guess_yml")
+                with open(config_file, mode="r", encoding="utf-8") as file_handler:
+                    config = yaml.safe_load(file_handler)
+
+
             logger.info("config_file={}", config_file)
             defs = config[fileformat]
             geo_input = None

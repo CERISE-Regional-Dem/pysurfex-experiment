@@ -11,7 +11,7 @@ realizations = []
 os_macros = ["HOME"]
             
 hh_list="00-21:3"                       # Which cycles to run, replaces FCINT
-ll_list="48,3,3,3,3,3,3,3"              # Forecast lengths for the cycles [h], replaces LL, LLMAIN
+ll_list="3,3,3,3,3,3,3,3"              # Forecast lengths for the cycles [h], replaces LL, LLMAIN
                                         # The LL_LIST list is wrapped around if necessary, to fit HH_LIST
 
 [general.times]
@@ -53,6 +53,7 @@ fileformat = "netcdf"
 # fileformat = "surfex"
 converter = "none"
 input_geo_file = ""     # Needed for some surfex file types
+user_config = ""
 
 [initial_conditions.fg4oi.air_temperature_2m]
 
