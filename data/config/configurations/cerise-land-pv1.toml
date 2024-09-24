@@ -39,6 +39,9 @@ converter = "none"
 inputfile = "@sfx_exp_data@/climate/PGD.fa"
 converter = "none"
 fileformat = "fa"
+[initial_conditions.fg4oi.air_temperature_2m]
+inputfile = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/SURFOUT.@YYYY@@MM@@DD@_@HH_LL@h00.nc"
+converter = "none"
 
 [forecast]
 #####################################################################################################
@@ -93,10 +96,10 @@ coef = 0.5
 [assim.general]
 do_assim = true
 hofxpath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@mbr@/SURFOUT.@YYYY_LL@@MM_LL@@DD_LL@_@HH_LL@h00.nc"
-obpath = "@sfx_exp_data@/archive/observations/@YYYY@/@MM@/@DD@/@HH@/qc_surface_snow_thickness.json"
+obpath = "@sfx_exp_data@/archive/observations/@YYYY@/@MM@/@DD@/@HH@/qc_@obtype@.json"
 
-[assim.control.observation_vector.T2M]
-assimilate = true
+[assim.control.observation_vector.airTemperatureAt2M]
+assimilate = false
 
 [assim.control.observation_vector.totalSnowDepth]
 assimilate = true
