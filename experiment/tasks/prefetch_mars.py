@@ -61,6 +61,40 @@ class PrefetchMars(AbstractTask):
         os.makedirs(gribdir, exist_ok=True)
         prefetch(dts, gribdir)
 
+class PrefetchMarsObs(AbstractTask):
+    """Perturb state task."""
+
+    def __init__(self, config):
+        """Construct assim task.
+
+        Args:
+            config (dict): Actual configuration dict
+
+        """
+        AbstractTask.__init__(self, config, name="PrefetchMarsObs")
+        self.var_name = self.config.get_value("task.var_name")
+        
+    def execute(self):
+        """Execute the perturb state task.
+
+        Raises:
+            NotImplementedError: _description_
+        """
+        dtg = self.dtg
+        fcint = self.fcint
+
+        kwargs = {}
+        
+        with open(self.wdir + "/domain.json", mode="w", encoding="utf-8") as file_handler:
+            json.dump(self.geo.json, file_handler, indent=2)
+        kwargs.update({"domain": self.wdir + "/domain.json"})
+        
+        kwargs.update({"dtg_start": dtg.strftime("%Y%m%d%H")})
+        kwargs.update({"dtg_stop": (dtg + fcint).strftime("%Y%m%d%H")})
+        obsdir =  self.platform.substitute(self.config.get_value("system.obs_dir"))
+        os.makedirs(obsdir, exist_ok=True)
+        prefetch_synop(dtg, obsdir)
+
 
 class Request(object):
 
@@ -316,4 +350,25 @@ def prefetch(dts, dest):
     else:
         print("WARNING! the data is already fetched, consider to clean")
     split_files(dest + tempfile, dest)
+
+
+def prefetch_synop(dt, dest):
+    dt_ = dt - datetime.timedelta(hours=1)
+    date = dt_.strftime("%Y%m%d")
+    time = dt_.strftime("%H")
+    target = f'ob{date}{time}'
+    request = f'''retrieve,
+    type    = ob,
+    obsgroup= con,
+    obstype = lsd,
+    date    = {date},
+    time    = {time},
+    range   = 120,
+    area    = 90/0/60/45,
+    target  = {target}'''
+    request_file = "request.out"
+    with open(request_file, 'w') as f:
+        f.write(request)
+    result = subprocess.run(["mars", request_file])
+    result = subprocess.run(["mv",] + [target] + [dest])
 

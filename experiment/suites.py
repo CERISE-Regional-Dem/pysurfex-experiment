@@ -267,6 +267,16 @@ class SurfexSuite:
                 )
                 triggers =  EcflowSuiteTriggers([EcflowSuiteTrigger(prefetch)])
 
+            obs = EcflowSuiteTask(
+                "PrefetchMarsObs",
+                cycle_input,
+                config,
+                task_settings,
+                ecf_files,
+                input_template=template,
+                triggers=triggers
+            )
+
             forcing = EcflowSuiteTask(
                 "Forcing",
                 cycle_input,
@@ -614,29 +624,32 @@ class SurfexSuite:
                         need_lsm = False
                         if settings.setting_is("SURFEX.ASSIM.SCHEMES.ISBA", "OI"):
                             need_lsm = True
-                    if need_lsm:
-                        triggers = EcflowSuiteTriggers(fg4oi_complete)
-                        prepare_lsm = EcflowSuiteTask(
-                            "PrepareLSM",
-                            initialization,
-                            config,
-                            task_settings,
-                            ecf_files,
-                            triggers=triggers,
-                            input_template=template,
-                        )
+                        if settings.setting_is("SURFEX.ASSIM.SCHEMES.INLAND_WATER", "WATFLX"):
+                            if config.get_value("SURFEX.ASSIM.INLAND_WATER.LEXTRAP_WATER"):
+                                need_lsm = True
+                        if need_lsm:
+                            triggers = EcflowSuiteTriggers(fg4oi_complete)
+                            prepare_lsm = EcflowSuiteTask(
+                                "PrepareLSM",
+                                initialization,
+                                config,
+                                task_settings,
+                                ecf_files,
+                                triggers=triggers,
+                                input_template=template,
+                            )
 
-                    triggers = [EcflowSuiteTrigger(fg_task), oi2soda_complete]
-                    if perturbations is not None:
-                        triggers.append(EcflowSuiteTrigger(perturbations))
-                    if prepare_oi_soil_input is not None:
-                        triggers.append(EcflowSuiteTrigger(prepare_oi_soil_input))
-                    if prepare_oi_climate is not None:
-                        triggers.append(EcflowSuiteTrigger(prepare_oi_climate))
-                    if prepare_sst is not None:
-                        triggers.append(EcflowSuiteTrigger(prepare_sst))
-                    if prepare_lsm is not None:
-                        triggers.append(EcflowSuiteTrigger(prepare_lsm))
+                        triggers = [EcflowSuiteTrigger(fg_task), oi2soda_complete]
+                        if perturbations is not None:
+                            triggers.append(EcflowSuiteTrigger(perturbations))
+                        if prepare_oi_soil_input is not None:
+                            triggers.append(EcflowSuiteTrigger(prepare_oi_soil_input))
+                        if prepare_oi_climate is not None:
+                            triggers.append(EcflowSuiteTrigger(prepare_oi_climate))
+                        if prepare_sst is not None:
+                            triggers.append(EcflowSuiteTrigger(prepare_sst))
+                        if prepare_lsm is not None:
+                            triggers.append(EcflowSuiteTrigger(prepare_lsm))
 
                         triggers = EcflowSuiteTriggers(triggers)
                         if config.get_value("assim.general.do_assim") != True:
