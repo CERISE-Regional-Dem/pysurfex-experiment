@@ -267,6 +267,16 @@ class SurfexSuite:
                 )
                 triggers =  EcflowSuiteTriggers([EcflowSuiteTrigger(prefetch)])
 
+            obs = EcflowSuiteTask(
+                "PrefetchMarsObs",
+                cycle_input,
+                config,
+                task_settings,
+                ecf_files,
+                input_template=template,
+                triggers=triggers
+            )
+
             forcing = EcflowSuiteTask(
                 "Forcing",
                 cycle_input,
