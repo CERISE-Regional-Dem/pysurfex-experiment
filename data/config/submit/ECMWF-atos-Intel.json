@@ -141,7 +141,7 @@
       "BATCH": {
          "WALLTIME": "#SBATCH --time=00:20:00",
          "MEMORY": "#SBATCH --mem=100G",
-         "CPUS": "#SBATCH --ntasks=10"
+         "CPUS": "#SBATCH --ntasks=20"
        }
     },
     "ArchiveECFS": {
