@@ -35,7 +35,7 @@ fileformat = "fa"
 [initial_conditions.fg4oi.surface_snow_thickness]
 inputfile = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/SURFOUT.@YYYY@@MM@@DD@_@HH_LL@h00.nc"
 converter = "none"
-fileformat = "netcdf"
+fileformat = "surfex"
 [initial_conditions.fg4oi.land_area_fraction]
 inputfile = "@sfx_exp_data@/climate/PGD.fa"
 converter = "none"
@@ -43,7 +43,7 @@ fileformat = "fa"
 [initial_conditions.fg4oi.air_temperature_2m]
 inputfile = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/SURFOUT.@YYYY@@MM@@DD@_@HH_LL@h00.nc"
 converter = "none"
-fileformat = "netcdf"
+fileformat = "surfex"
 
 [forecast]
 #####################################################################################################
