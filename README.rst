@@ -61,6 +61,33 @@ Usage
 There are two ways to set up an experiment. Either in an experiment with the config files inside the experiment,
 or as a self contained configuration file with all settings inside.
 
+Cerise Regional demonstrator on atos
+-------------------------------------
+Follow above instructions to install poetry evnvironment
+Note clone from "git@github.com:CERISE-Regional-Dem/pysurfex-experiment.git"
+with env activated:
+
+.. code-block:: bash
+
+ cd /home/$USER/sfx_home/
+ mkdir my_reanalysis
+ cd my_reanalysis
+
+ export PYSURFEX_EXPERIMENT_PATH="pysurfex-experiment-clone-dir"
+ export OFFLINE_SOURCE_CODE="path-to-your-offline-source-code"
+
+ PySurfexExpSetup -exp_name my_reanalysis -o /home/$USER/sfx_home/my_reanalysis/my_reanalysis.json --config cerise-land-pv1 -host ECMWF-atos-Intel -experiment $PYSURFEX_EXPERIMENT_PATH -offline $OFFLINE_SOURCE_CODE
+ 
+ # This will create a json file in your experiment directory. You will now have to open it and change:
+ # 1. "ecf_host" to your ecflow server.
+ # 2. "ACCOUNT" to your slurm account
+
+ # Start your experiment
+ PySurfexExp start -dtg "2023-09-01T00:00:00Z" -dtgend "2023-09-01T06:00:00Z" -config my_reanalysis.json 
+
+The suite should now appear in your ecflow server.
+
+
 Approach 1: All sub-config files in an experiment
 ----------------------------------------------------
 
@@ -100,7 +127,9 @@ In addition you will get some other config files used in the tasks. An example o
  
  # To re-configure your config and (re-)create exp_configuration.json
  PySurfexExpConfig
+
  
+
  # To start you experiment
  PySurfexExp start -dtg 202301010300 -dtgend 202301010600
 
