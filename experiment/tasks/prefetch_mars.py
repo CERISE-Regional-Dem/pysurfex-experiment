@@ -356,7 +356,7 @@ def prefetch_synop(dt, dest):
     dt_ = dt - datetime.timedelta(hours=1)
     date = dt_.strftime("%Y%m%d")
     time = dt_.strftime("%H")
-    target = f'ob{date}{time}'
+    target = f'ob{dt.strftime("%Y%m%d%H}'
     request = f'''retrieve,
     type    = ob,
     obsgroup= con,
