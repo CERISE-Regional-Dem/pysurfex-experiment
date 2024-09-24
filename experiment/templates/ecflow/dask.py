@@ -103,12 +103,13 @@ def default_main(**kwargs):
 if __name__ == "__main__":
 
     cluster = LocalCluster(
-            n_workers=10,
+            n_workers=20,
             threads_per_worker=1,
             processes=True, 
-            memory_limit="8GiB")
+            memory_limit="80GiB")
     client = Client(cluster)
     # Get ecflow variables
+    print("Dask client dashboard", client.dashboard_link)
     kwargs_main = parse_ecflow_vars()
 
     default_main(**kwargs_main)
