@@ -6,17 +6,17 @@ ecfs_pattern = "ec:sfx_data/@case@/@YYYY@/"
 archive_hours = ["00", "03", "06", "09", "12", "15", "18", "21"]
 
 [domain]
-name = "AROME_ARCTIC_ML"
-nimax = 300
-njmax = 450
-xloncen = 21.5
-xlatcen = 67.7
+name = "AROME_ARCTIC"
+nimax = 800
+njmax = 1000
+xloncen = 26.0
+xlatcen = 74.0
 xdx = 2500.0
 xdy = 2500.0
-ilone = 11
-ilate = 11
-xlon0 = -25.0
-xlat0 = 77.5
+ilone = 0
+ilate = 0
+xlon0 = -24.0
+xlat0 = 80.0
 
 
 [initial_conditions]
@@ -26,16 +26,19 @@ prep_pgdfile = ""
 [initial_conditions.fg4oi]
 inputfile = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/SURFOUT.nc"
 fileformat = "surfex"
+user_config = "@pysurfex_experiment@/data/config/first_guess.yml"
 
 [initial_conditions.fg4oi.altitude]
-inputfile = "@sfx_exp_data@/climate/PGD.nc"
+inputfile = "@sfx_exp_data@/climate/PGD.fa"
 converter = "none"
+fileformat = "fa"
 [initial_conditions.fg4oi.surface_snow_thickness]
 inputfile = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/SURFOUT.@YYYY@@MM@@DD@_@HH_LL@h00.nc"
 converter = "none"
 [initial_conditions.fg4oi.land_area_fraction]
-inputfile = "@sfx_exp_data@/climate/PGD.nc"
-converter = "nature_town"
+inputfile = "@sfx_exp_data@/climate/PGD.fa"
+converter = "none"
+fileformat = "fa"
 
 [forecast]
 #####################################################################################################
@@ -90,13 +93,12 @@ coef = 0.5
 [assim.general]
 do_assim = true
 hofxpath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@mbr@/SURFOUT.@YYYY_LL@@MM_LL@@DD_LL@_@HH_LL@h00.nc"
-obpath = "/hpcperm/fab0/sfx_data/nordic/observations/@YYYY@/@MM@/@DD@/@HH@/newob@YYYY@@MM@@DD@@HH@.json"
-station_location_file = "/perm/fab0/projects/cerise/obslocs.json"
+obpath = "@sfx_exp_data@/archive/observations/@YYYY@/@MM@/@DD@/@HH@/qc_surface_snow_thickness.json"
 
 [assim.control.observation_vector.T2M]
 assimilate = true
 
-[assim.control.observation_vector.DSN_T_ISBA]
+[assim.control.observation_vector.totalSnowDepth]
 assimilate = true
 
 [assim.control.control_vector."WSN_VEG@level@"]
@@ -196,9 +198,9 @@ XTPRT_M = [0.0001, 0.0001, 0.00001, 0.00001] # Perturbation magnitude
 LLINCHECK = true
 
 [SURFEX.ASSIM.ISBA]
-UPDATE_SNOW_CYCLES = ["06"]          # Cycles to update snow depths/SWE in assimilation.
+UPDATE_SNOW_CYCLES = ["00","03","06","09","12","15","18","21"]          # Cycles to update snow depths/SWE in assimilation.
  
 [SURFEX.ASSIM.OBS]
-COBS_M = ["T2M", "HU2M", "WG2 ", "LAI", "SWE"]
-NNCO = [1, 1, 0, 0, 0]
+COBS_M = ["SWE"]
+NNCO = [1, 0, 0, 0, 0]
 XERROBS_M = [1.0, 0.1, 0.1, 0.1, 20.0]

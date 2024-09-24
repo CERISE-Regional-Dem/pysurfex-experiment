@@ -3,12 +3,12 @@
 #---------------------------------------------------
 #  TITAN observation settings
 #---------------------------------------------------
-synop_obs_t2m = true             # SYNOP 2m air temperature from bufr files
-synop_obs_rh2m = true            # SYNOP 2m relative humidity from bufr files
+synop_obs_t2m = false            # SYNOP 2m air temperature from bufr files
+synop_obs_rh2m = false           # SYNOP 2m relative humidity from bufr files
 synop_obs_sd = true              # SYNOP snow depth from bufr files
 cryo_obs_sd = false              # Use cryoclim snow pseudo-observations
-netatmo_obs_t2m = true           # 2m air temperature observations from Netatmo stations
-netatmo_obs_rh2m = true          # 2m relative humidity observations from Netatmo stations
+netatmo_obs_t2m = false          # 2m air temperature observations from Netatmo stations
+netatmo_obs_rh2m = false         # 2m relative humidity observations from Netatmo stations
 netatmo_filepattern = "@sfx_exp_data@/archive/observations/@YYYY@/@MM@/@DD@/@HH@/@RRR@"
 # netatmo_filepattern = "/lustre/storeB/project/metproduction/products/netatmo/@YYYY@/@MM@/@DD@/@YYYY@@MM@@DD@T@HH@@mm@01Z.json"
 # netatmo_filepattern = "/tmp/host1/testdata/@YYYY@@MM@@DD@T@HH@@mm@*Z_all.json"

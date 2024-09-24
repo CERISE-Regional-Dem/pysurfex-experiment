@@ -39,7 +39,8 @@
        "QOS": "#SBATCH --qos=nf",
        "NNODES": "#SBATCH  --nodes=1",
        "NTASKS": "#SBATCH  --ntasks=1",
-       "NTPC": "#SBATCH --ntasks-per-core=1"
+       "NTPC": "#SBATCH --ntasks-per-core=1",
+       "ACCOUNT": "#SBATCH --account=ACCOUNT"
     },
     "tasks": [
       "Forecast", "PerturbedRun", "Pgd", "Prep", "Soda"
@@ -86,6 +87,24 @@
           "OMP_NUM_THREADS": "import os; os.environ['OMP_NUM_THREADS']='1';"
        }
     },
+    "Pgd": {
+        "WRAPPER": "srun -n 1",
+        "BATCH": {
+          "WALLTIME": "#SBATCH --time=03:00:00"
+        },
+        "ENV": {
+          "OMP_NUM_THREADS": "import os; os.environ['OMP_NUM_THREADS']='1';"
+        }
+      },
+      "Prep": {
+        "WRAPPER": "srun -n 1",
+        "BATCH": {
+          "WALLTIME": "#SBATCH --time=03:00:00"
+        },
+        "ENV": {
+          "OMP_NUM_THREADS": "import os; os.environ['OMP_NUM_THREADS']='1';"
+        }
+      },
     "QualityControl": {
       "ENV": {
         "ECCODES": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'ecmwf-toolbox')"
@@ -97,6 +116,11 @@
            "ECCODES": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'ecmwf-toolbox')"
       }
     },
+    "FirstGuess4OI": {
+        "ENV": {
+          "EPYGRAM": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('use', '/perm/hlam/apps/modulefiles/lmod'); module('load', 'epygram'); import sys; sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13/epygram'); sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13/site'); sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13')"
+        }
+     },
     "ModifyForcing":{
       "ENV":{
         "epygram": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('use', '/perm/hlam/apps/modulefiles/lmod'); module('load', 'epygram'); import sys; sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13/epygram'); sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13/site'); sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13')"
