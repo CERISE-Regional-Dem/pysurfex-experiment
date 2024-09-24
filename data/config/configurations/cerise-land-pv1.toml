@@ -6,7 +6,7 @@ ecfs_pattern = "ec:sfx_data/@case@/@YYYY@/"
 archive_hours = ["00", "03", "06", "09", "12", "15", "18", "21"]
 
 [domain]
-name = "AROME_ARCTIC"
+name = "CARRA_NE"
 nimax = 800
 njmax = 1000
 xloncen = 26.0
@@ -35,10 +35,15 @@ fileformat = "fa"
 [initial_conditions.fg4oi.surface_snow_thickness]
 inputfile = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/SURFOUT.@YYYY@@MM@@DD@_@HH_LL@h00.nc"
 converter = "none"
+fileformat = "netcdf"
 [initial_conditions.fg4oi.land_area_fraction]
 inputfile = "@sfx_exp_data@/climate/PGD.fa"
 converter = "none"
 fileformat = "fa"
+[initial_conditions.fg4oi.air_temperature_2m]
+inputfile = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/SURFOUT.@YYYY@@MM@@DD@_@HH_LL@h00.nc"
+converter = "none"
+fileformat = "netcdf"
 
 [forecast]
 #####################################################################################################
@@ -93,10 +98,10 @@ coef = 0.5
 [assim.general]
 do_assim = true
 hofxpath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@mbr@/SURFOUT.@YYYY_LL@@MM_LL@@DD_LL@_@HH_LL@h00.nc"
-obpath = "@sfx_exp_data@/archive/observations/@YYYY@/@MM@/@DD@/@HH@/qc_surface_snow_thickness.json"
+obpath = "@sfx_exp_data@/archive/observations/@YYYY@/@MM@/@DD@/@HH@/qc_@obtype@.json"
 
-[assim.control.observation_vector.T2M]
-assimilate = true
+[assim.control.observation_vector.airTemperatureAt2M]
+assimilate = false
 
 [assim.control.observation_vector.totalSnowDepth]
 assimilate = true

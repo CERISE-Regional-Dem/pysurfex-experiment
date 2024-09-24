@@ -90,7 +90,11 @@
     "Pgd": {
         "WRAPPER": "srun -n 1",
         "BATCH": {
-          "WALLTIME": "#SBATCH --time=03:00:00"
+          "WALLTIME": "#SBATCH --time=03:00:00",
+          "NTASKS": "#SBATCH  --ntasks=1",
+          "QOS": "#SBATCH --qos=np",
+          "NNODES": "#SBATCH  --nodes=1",
+          "NTPC": "#SBATCH --ntasks-per-core=1"
         },
         "ENV": {
           "OMP_NUM_THREADS": "import os; os.environ['OMP_NUM_THREADS']='1';"
@@ -99,7 +103,11 @@
       "Prep": {
         "WRAPPER": "srun -n 1",
         "BATCH": {
-          "WALLTIME": "#SBATCH --time=03:00:00"
+          "WALLTIME": "#SBATCH --time=01:00:00",
+          "NTASKS": "#SBATCH  --ntasks=1",
+          "QOS": "#SBATCH --qos=np",
+          "NNODES": "#SBATCH  --nodes=1",
+          "NTPC": "#SBATCH --ntasks-per-core=1"
         },
         "ENV": {
           "OMP_NUM_THREADS": "import os; os.environ['OMP_NUM_THREADS']='1';"
