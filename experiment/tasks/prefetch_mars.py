@@ -353,19 +353,36 @@ def prefetch(dts, dest):
 
 
 def prefetch_synop(dt, dest):
+    
     dt_ = dt - datetime.timedelta(hours=1)
     date = dt_.strftime("%Y%m%d")
+    ea_date = datetime.datetime(2002, 1, 1, tzinfo=datetime.timezone.utc)
     time = dt_.strftime("%H")
+    time_ea = dt.strftime("%H")
     target = f'ob{dt.strftime("%Y%m%d%H")}'
-    request = f'''retrieve,
-    type    = ob,
-    obsgroup= con,
-    obstype = lsd,
-    date    = {date},
-    time    = {time},
-    range   = 120,
-    area    = 90/0/60/45,
-    target  = {target}'''
+    
+    if dt < ea_date:
+      request = f'''retrieve,
+        class   = E4,
+        repres  = BUFR,
+        type    = AI,
+        obsgroup= con,
+        obstype = lsd,
+        date    = {date},
+        time    = {time_ea},
+        area    = 90/0/60/45,
+        target  = {target}'''
+    else:
+        request = f'''retrieve,
+        type    = ob,
+        obsgroup= con,
+        obstype = lsd,
+        date    = {date},
+        time    = {time},
+        range   = 120,
+        area    = 90/0/60/45,
+        target  = {target}'''
+        
     request_file = "request.out"
     with open(request_file, 'w') as f:
         f.write(request)
