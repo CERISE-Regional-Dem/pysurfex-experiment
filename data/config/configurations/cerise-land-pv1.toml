@@ -15,7 +15,7 @@ xdx = 2500.0
 xdy = 2500.0
 ilone = 0
 ilate = 0
-xlon0 = -24.0
+xlon0 = -34.0
 xlat0 = 80.0
 
 
@@ -33,7 +33,7 @@ inputfile = "@sfx_exp_data@/climate/PGD.fa"
 converter = "none"
 fileformat = "fa"
 [initial_conditions.fg4oi.surface_snow_thickness]
-inputfile = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/SURFOUT.@YYYY@@MM@@DD@_@HH_LL@h00.nc"
+inputfile = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/SURFOUT.@YYYY_LL@@MM_LL@@DD_LL@_@HH_LL@h00.nc"
 converter = "none"
 fileformat = "surfex"
 [initial_conditions.fg4oi.land_area_fraction]
@@ -41,7 +41,7 @@ inputfile = "@sfx_exp_data@/climate/PGD.fa"
 converter = "none"
 fileformat = "fa"
 [initial_conditions.fg4oi.air_temperature_2m]
-inputfile = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/SURFOUT.@YYYY@@MM@@DD@_@HH_LL@h00.nc"
+inputfile = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/SURFOUT.@YYYY_LL@@MM_LL@@DD_LL@_@HH_LL@h00.nc"
 converter = "none"
 fileformat = "surfex"
 
