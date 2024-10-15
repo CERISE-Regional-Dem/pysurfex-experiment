@@ -217,6 +217,7 @@ class SurfexSuite:
         prediction_dtg_node = {}
         post_processing_dtg_node = {}
         prev_dtg = None
+        prefetch = None
         for __, dtg in enumerate(dtgs):
             dtg_str = datetime2ecflow(dtg)
             variables = {"DTG": dtg_str, "DTGBEG": dtgbeg_str}
@@ -256,7 +257,7 @@ class SurfexSuite:
                 "CycleInput", dtg_node, ecf_files, triggers=triggers
             )
             cycle_input_dtg_node.update({dtg_str: cycle_input})
-            if dtg.hour == 0 or dtg.hour == dtgs[0]:
+            if dtg.hour == 0 or dtg == dtgs[0]:
                 prefetch = EcflowSuiteTask(
                     "PrefetchMars",
                     cycle_input,
@@ -265,7 +266,8 @@ class SurfexSuite:
                     ecf_files,
                     input_template=template,
                 )
-                triggers =  EcflowSuiteTriggers([EcflowSuiteTrigger(prefetch)])
+            if prefetch is not None:
+                grib_fetched =  EcflowSuiteTriggers([EcflowSuiteTrigger(prefetch)])
 
             obs = EcflowSuiteTask(
                 "PrefetchMarsObs",
@@ -284,7 +286,7 @@ class SurfexSuite:
                 task_settings,
                 ecf_files,
                 input_template=template,
-                triggers=triggers
+                triggers=grib_fetched
             )
             triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(forcing)])
             if config.get_value("forcing.modify_forcing"):
@@ -680,6 +682,7 @@ class SurfexSuite:
                             ecf_files,
                             triggers=triggers,
                             input_template=template)
+                    noise_created = EcflowSuiteTriggers([EcflowSuiteTrigger(create_noise)])
                 da_this = False
                 if config.get_value("assim.general.do_assim") == True and dtg > dtgbeg:  # and dtg.hour == 6:
                     da_this = True
@@ -702,7 +705,7 @@ class SurfexSuite:
                         variables = {"ARGS": args, "ENSMBR": int(m)}
                         pert = EcflowSuiteFamily(name, ens_prep, ecf_files, variables=variables) 
                         if pert_forcing:
-                            EcflowSuiteTask("PerturbForcing", pert, config, task_settings, ecf_files,triggers=triggers, input_template=template)
+                            EcflowSuiteTask("PerturbForcing", pert, config, task_settings, ecf_files,triggers=noise_created, input_template=template)
                         if dtg == dtgbeg:
                             prep = EcflowSuiteTask("Prep", pert, config, task_settings, ecf_files,input_template=template)
                         else:
