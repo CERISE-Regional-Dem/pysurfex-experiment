@@ -56,6 +56,7 @@ class PrefetchMars(AbstractTask):
         kwargs.update({"dtg_stop": (dtg + fcint).strftime("%Y%m%d%H")})
         dtg0 = dtg - datetime.timedelta(hours=dtg.hour)
         dts = [dtg0 + datetime.timedelta(hours=i*3) for i in range(8)]
+        # TODO is it possible to get the dtgend value and prefetch the whole period?
         print(dts)
         gribdir =  self.config.get_value("system.sfx_exp_data") + "/grib/"
         os.makedirs(gribdir, exist_ok=True)
