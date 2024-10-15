@@ -682,14 +682,13 @@ class SurfexSuite:
                             input_template=template)
                 da_this = False
                 if config.get_value("assim.general.do_assim") == True and dtg > dtgbeg:  # and dtg.hour == 6:
-                    da_this = True
-                    prep = EcflowSuiteTask("ExternalAssim", ens_prep, config, task_settings, ecf_files,triggers=triggers, input_template=dask_template)
+                    da_this = True                    
                 elif dtg == dtgbeg:
                     pass
                 else:
                     prep = EcflowSuiteTask("CycleFirstGuess", ens_prep, config, task_settings, ecf_files,triggers=triggers, input_template=template)
                 if pert_forcing:
-                    triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(create_noise), EcflowSuiteTrigger(prep)])
+                    triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(create_noise)])
                 else:
                     triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(prep)])
 
@@ -714,10 +713,12 @@ class SurfexSuite:
                             EcflowSuiteTask("PerturbState", pert, config, task_settings, ecf_files,triggers=triggers, input_template=template)
 
                 triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(ens_prep)])
+            
+            if da_this:
+                letkf = EcflowSuiteFamily("LETKF", dtg_node, ecf_files, triggers=triggers)
+                prep = EcflowSuiteTask("ExternalAssim", letkf, config, task_settings, ecf_files,triggers=triggers, input_template=dask_template)
 
-
-
-
+                triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(prep)])
             #####################
             prediction = EcflowSuiteFamily(
                 "Prediction", dtg_node, ecf_files, triggers=triggers
@@ -779,7 +780,7 @@ class SurfexSuite:
                     if config.get_value("general.arhive_ecfs") and (dtg + fgint).strftime("%w%H") == "000":
                         archive_ecfs = EcflowSuiteTask("ArchiveECFS", member, config, task_settings, ecf_files,input_template=template)
                         triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(archive_ecfs), EcflowSuiteTrigger(member)])
-            if analysis is not None:
+            if ((analysis is not None) and (config.get_value("assim.general.do_assim") == False)):
                 qc2obsmon = EcflowSuiteTask(
                     "Qc2obsmon",
                     pp_fam,
