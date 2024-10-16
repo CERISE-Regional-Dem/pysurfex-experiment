@@ -75,6 +75,9 @@ with env activated:
 
  export PYSURFEX_EXPERIMENT_PATH="pysurfex-experiment-clone-dir"
  export OFFLINE_SOURCE_CODE="path-to-your-offline-source-code"
+ # OFFLINE_SOURCE_CODE should point to a clone of "git@github.com:CERISE-Regional-Dem/Harmonie.git"
+ # Note that it by default compiles single precision reals. Since PGD needs to be created with double precision PGD either needs to be copied, 
+ # or OFFLINE_SOURCE_CODE/util/cmake/config/config.aa.Intel.offline.json needs to be modified ("precision":"single" -> "precision":"double") to run double precision reals.
 
  PySurfexExpSetup -exp_name my_reanalysis -o /home/$USER/sfx_home/my_reanalysis/my_reanalysis.json --config cerise-land-pv1 -host ECMWF-atos-Intel -experiment $PYSURFEX_EXPERIMENT_PATH -offline $OFFLINE_SOURCE_CODE
  

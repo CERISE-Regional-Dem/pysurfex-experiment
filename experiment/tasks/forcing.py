@@ -145,14 +145,17 @@ class ModifyForcing(AbstractTask):
         """Execute the forcing task."""
         dtg = self.dtg
         dtg_prev = dtg - self.fcint
+        
+        dtg_c = dtg.strftime('%Y%m%d%H')
+        dtg_p = dtg_prev.strftime('%Y%m%d%H')
+
         logger.debug("modify forcing dtg={} dtg_prev={}", dtg, dtg_prev)
         forcing_dir = self.platform.get_system_value("forcing_dir")
-        input_dir = self.platform.substitute(forcing_dir, basetime=dtg_prev)
-        output_dir = self.platform.substitute(forcing_dir, basetime=dtg)
-        input_file = input_dir + "FORCING.nc"
-        output_file = output_dir + "FORCING.nc"
+        input_file = forcing_dir.replace( dtg_c, dtg_p )      
+        input_file = input_file + "FORCING.nc"
+        output_file = forcing_dir + "/FORCING.nc"
         time_step = -1
-        variables = ["LWdown", "DIR_SWdown"]
+        variables = ["LWdown", "DIR_SWdown", "SCA_SWdown"]
         kwargs = {}
 
         kwargs.update({"input_file": input_file})
