@@ -121,6 +121,31 @@ class Forcing(AbstractTask):
         else:
             options, var_objs, att_objs = set_forcing_config(**kwargs)
             run_time_loop(options, var_objs, att_objs)
+        # Modify forcing
+        if self.config.get_value("forcing.modify_forcing"):
+            dtg = self.dtg
+            dtg_prev = dtg - self.fcint
+            
+            dtg_c = dtg.strftime('%Y%m%d%H')
+            dtg_p = dtg_prev.strftime('%Y%m%d%H')
+
+            logger.debug("modify forcing dtg={} dtg_prev={}", dtg, dtg_prev)
+            forcing_dir = self.platform.get_system_value("forcing_dir")
+            input_file = forcing_dir.replace( dtg_c, dtg_p )      
+            input_file = input_file + "FORCING.nc"
+            output_file = forcing_dir + "/FORCING.nc"
+            time_step = -1
+            variables = ["LWdown", "DIR_SWdown", "SCA_SWdown"]
+            kwargs = {}
+
+            kwargs.update({"input_file": input_file})
+            kwargs.update({"output_file": output_file})
+            kwargs.update({"time_step": time_step})
+            kwargs.update({"variables": variables})
+            if os.path.exists(output_file) and os.path.exists(input_file):
+                modify_forcing(**kwargs)
+            else:
+                logger.info("Output or input is missing: {}", output_file)
 
 
 class ModifyForcing(AbstractTask):

@@ -29,17 +29,17 @@ fileformat = "surfex"
 user_config = "@pysurfex_experiment@/data/config/first_guess.yml"
 
 [initial_conditions.fg4oi.altitude]
-inputfile = "@sfx_exp_data@/climate/PGD.fa"
+inputfile = "@sfx_exp_data@/climate/PGD.nc"
 converter = "none"
-fileformat = "fa"
+fileformat = "surfex"
 [initial_conditions.fg4oi.surface_snow_thickness]
 inputfile = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/SURFOUT.@YYYY_LL@@MM_LL@@DD_LL@_@HH_LL@h00.nc"
 converter = "none"
 fileformat = "surfex"
 [initial_conditions.fg4oi.land_area_fraction]
-inputfile = "@sfx_exp_data@/climate/PGD.fa"
-converter = "none"
-fileformat = "fa"
+inputfile = "@sfx_exp_data@/climate/PGD.nc"
+converter = "nature_town"
+fileformat = "surfex"
 [initial_conditions.fg4oi.air_temperature_2m]
 inputfile = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/SURFOUT.@YYYY_LL@@MM_LL@@DD_LL@_@HH_LL@h00.nc"
 converter = "none"
@@ -51,7 +51,7 @@ fileformat = "surfex"
 #####################################################################################################
 
 physics = "arome"
-ensmsel = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]          # Ensemble members to run (list with member numbers)
+ensmsel = [0,1,2,3,4,5,6,7,8,9]          # Ensemble members to run (list with member numbers)
 
 forc_zs = true
 
@@ -125,14 +125,6 @@ levels = "1-12"
 [assim.control.control_vector.ASN_VEG]
 assimilate = false
 
-[assim.control.control_vector."TG@level@"]
-assimilate = true
-levels = "1-3"
-
-[assim.control.control_vector."WG@level@"]
-assimilate = true
-levels = "1-5"
-
 [assim.localization]
 horizontal_gp = 20
 vertical_m = 200
@@ -165,9 +157,9 @@ modify_forcing = true
 interpolation = "bilinear"
 
 [SURFEX.IO]
-CSURF_FILETYPE = "FA"
+CSURF_FILETYPE = "NC"
 CTIMESERIES_FILETYPE = "NC"         # Fileformat for timseries. Inline runs use FA
-LSELECT = false                     # Only write selected diagnostics
+LSELECT = true                      # Only write selected diagnostics
 XTSTEP_OUTPUT = 10800.0             # Output interval from the binary OFFLINE
 LSPLIT_PATCH = false                # Split patches into separate variables in output files
 
@@ -193,7 +185,11 @@ INLAND_WATER = "NONE"               # Assimilation method for water tile: "INPUT
 ISBA = "NONE"                         # Assimilation method for ISBA soil: "NONE"|"OI"|"EKF"
 TEB = "NONE"                        # Assimilation method for TEB tile: "NONE"|"ROADT"
 
-
+[SURFEX.TILES]
+SEA = "NONE"
+TOWN = "NONE"
+INLAND_WATER = "NONE"
+NATURE = "ISBA"
 
 [SURFEX.ASSIM.ISBA.EKF]
 NNCV = [0,1,0,1]                             # Active EKF control variables

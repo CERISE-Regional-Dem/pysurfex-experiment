@@ -80,13 +80,13 @@ class ExternalAssim(AbstractTask):
         print(obpattern)
         print(cfg_file)
         domain = {
-            "lon0": self.geo.xlon0,
-            "lat0": self.geo.xlat0,
-            "latc": self.geo.xlatcen,
-            "lonc": self.geo.xloncen,
-            "nx": self.geo.nimax,
-            "ny": self.geo.njmax,
-            "dx": self.geo.xdx}
+            "xlon0": self.geo.xlon0,
+            "xlat0": self.geo.xlat0,
+            "xlatcen": self.geo.xlatcen,
+            "xloncen": self.geo.xloncen,
+            "nimax": self.geo.nimax,
+            "njmax": self.geo.njmax,
+            "xdx": self.geo.xdx}
 
         csurf_filetype = self.config.get_value("SURFEX.IO.CSURF_FILETYPE").lower()
         pgdfile = self.config.get_value("system.climdir") + "/PGD." + csurf_filetype

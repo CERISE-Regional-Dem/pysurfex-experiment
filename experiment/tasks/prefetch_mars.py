@@ -8,6 +8,7 @@ import yaml
 from netCDF4 import Dataset
 import numpy as np
 import subprocess
+from experiment.datetime_utils import as_datetime
 from experiment.tasks import AbstractTask
 
 try:
@@ -55,7 +56,12 @@ class PrefetchMars(AbstractTask):
         kwargs.update({"dtg_start": dtg.strftime("%Y%m%d%H")})
         kwargs.update({"dtg_stop": (dtg + fcint).strftime("%Y%m%d%H")})
         dtg0 = dtg - datetime.timedelta(hours=dtg.hour)
-        dts = [dtg0 + datetime.timedelta(hours=i*3) for i in range(8)]
+        dtend = as_datetime(self.config.get_value("general.times.end"))
+        print(dtend)
+        ntimes = int((dtend - dtg0)/datetime.timedelta(hours=3))
+        print(ntimes)
+        dts = [dtg0 + datetime.timedelta(hours=i*3) for i in range(ntimes+2)]
+        # TODO is it possible to get the dtgend value and prefetch the whole period?
         print(dts)
         gribdir =  self.config.get_value("system.sfx_exp_data") + "/grib/"
         os.makedirs(gribdir, exist_ok=True)
@@ -344,7 +350,8 @@ def prefetch(dts, dest):
     #dts = [datetime.datetime(2015, 9, 8) + datetime.timedelta(hours=i*3) for i in range(8)]
     #dest = "/scratch/fab0/tmp/"
     
-    tempfile = dts[0].strftime("multi_carra_%Y%m%dT%HZ.grib2")
+    #tempfile = dts[0].strftime("multi_carra_%Y%m%dT%HZ.grib2")
+    tempfile = f"multi_carra_{dts[0].strftime('%Y%m%d')}_{dts[-1].strftime('%Y%m%d')}.grib2"
     if not os.path.exists(dest + tempfile):
         fetch_mars(dts, dest, tempfile)
     else:
