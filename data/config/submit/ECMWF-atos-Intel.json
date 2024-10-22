@@ -1,5 +1,5 @@
 {
-  "submit_types": ["background", "serial", "parallel"],
+  "submit_types": ["background", "remote", "serial", "parallel"],
   "default_submit_type": "serial",
   "background": {
     "SCHOST": "localhost",
@@ -77,11 +77,12 @@
       "Forecast": {
        "WRAPPER": "srun -n 32",
        "BATCH": {
-           "WALLTIME": "#SBATCH --time=00:15:00",
+           "WALLTIME": "#SBATCH --time=00:05:00",
            "NTASKS": "#SBATCH  --ntasks=32",
-           "QOS": "#SBATCH --qos=np",
+           "QOS": "#SBATCH --qos=nf",
            "NNODES": "#SBATCH  --nodes=1",
-           "NTPC": "#SBATCH --ntasks-per-core=1"
+           "NTPC": "#SBATCH --ntasks-per-core=1",
+	   "MEMORY": "#SBATCH --mem=15G"
        },
        "ENV": {
           "OMP_NUM_THREADS": "import os; os.environ['OMP_NUM_THREADS']='1';"
@@ -139,9 +140,9 @@
         "epygram": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('use', '/perm/hlam/apps/modulefiles/lmod'); module('load', 'epygram'); import sys; sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13/epygram'); sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13/site'); sys.path.insert(0, '/perm/hlam/apps/epygram/1.4.13')"
       },
       "BATCH": {
-         "WALLTIME": "#SBATCH --time=00:20:00",
-         "MEMORY": "#SBATCH --mem=100G",
-         "CPUS": "#SBATCH --ntasks=20"
+         "WALLTIME": "#SBATCH --time=00:05:00",
+         "MEMORY": "#SBATCH --mem=80G",
+         "CPUS": "#SBATCH --ntasks=10"
        }
     },
     "ArchiveECFS": {
