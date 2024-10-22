@@ -103,7 +103,6 @@ def default_main(**kwargs):
 if __name__ == "__main__":
 
     cluster = LocalCluster(
-            n_workers=20,
             threads_per_worker=1,
             processes=True, 
             memory_limit="80GiB")
