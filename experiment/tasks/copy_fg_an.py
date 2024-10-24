@@ -8,6 +8,7 @@ import yaml
 from netCDF4 import Dataset
 import numpy as np
 from experiment.tasks import AbstractTask
+import hashlib
 
 
 class CopyFG(AbstractTask):
@@ -59,5 +60,6 @@ class CopyFG(AbstractTask):
         print("BG", bgfile)
         print("AN", anfile)
         shutil.copyfile(bgfile, anfile)
-
+        if os.path.getsize(bgfile) != os.path.getsize(anfile):
+            raise RuntimeError("I tried to copy the file, but something got wrong!")
 
