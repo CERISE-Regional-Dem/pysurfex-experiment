@@ -7684,7 +7684,7 @@ offline_selected_output:
     - IMAX
     - JMAX
     - XX
-    - XY
+    - YY
     - DX
     - DY
     - FRAC_WATER
@@ -7700,13 +7700,94 @@ offline_selected_output:
     - PSNG_ISBA
     - PSNV_ISBA
     - TG1
+    - TG2
+    - TG3
+    - TG4
+    - TG5
+    - TG6
+    - TG7
+    - TG8
+    - TG9
+    - TG10
+    - TG11
+    - TG12
     - WSN_VEG1
+    - WSN_VEG2
+    - WSN_VEG3
+    - WSN_VEG4
+    - WSN_VEG5
+    - WSN_VEG6
+    - WSN_VEG7
+    - WSN_VEG8
+    - WSN_VEG9
+    - WSN_VEG10
+    - WSN_VEG11
+    - WSN_VEG12
     - WG1
+    - WG2
+    - WG3
+    - WG4
+    - WG5
+    - WG6
+    - WG7
+    - WG8
     - WGI1
+    - WGI2
+    - WGI3
+    - WGI4
+    - WGI5
+    - WGI6
+    - WGI7
+    - WGI8
     - RSN_VEG1
+    - RSN_VEG2
+    - RSN_VEG3
+    - RSN_VEG4
+    - RSN_VEG5
+    - RSN_VEG6
+    - RSN_VEG7
+    - RSN_VEG8
+    - RSN_VEG9
+    - RSN_VEG10
+    - RSN_VEG11
+    - RSN_VEG12
     - SNOWTEMP1
+    - SNOWTEMP2
+    - SNOWTEMP3
+    - SNOWTEMP4
+    - SNOWTEMP5
+    - SNOWTEMP6
+    - SNOWTEMP7
+    - SNOWTEMP8
+    - SNOWTEMP9
+    - SNOWTEMP10
+    - SNOWTEMP11
+    - SNOWTEMP12
     - SNOWLIQ1
+    - SNOWLIQ2
+    - SNOWLIQ3
+    - SNOWLIQ4
+    - SNOWLIQ5
+    - SNOWLIQ6
+    - SNOWLIQ7
+    - SNOWLIQ8
+    - SNOWLIQ9
+    - SNOWLIQ10
+    - SNOWLIQ11
+    - SNOWLIQ12
     - HSN_VEG1
+    - HSN_VEG2
+    - HSN_VEG3
+    - HSN_VEG4
+    - HSN_VEG5
+    - HSN_VEG6
+    - HSN_VEG7
+    - HSN_VEG8
+    - HSN_VEG9
+    - HSN_VEG10
+    - HSN_VEG11
+    - HSN_VEG12
+    - WSN_T_ISBA
     - PATCH
     - HU2M_ISBA
     - TALB_ISBA

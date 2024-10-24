@@ -716,7 +716,11 @@ class SurfexSuite:
                         if dtg == dtgbeg:
                             prep = EcflowSuiteTask("Prep", pert, config, task_settings, ecf_files,input_template=template)
                         else:
-                            cpfg = EcflowSuiteTask("CopyFG", pert, config, task_settings, ecf_files, triggers=None, input_template=template)
+                            trigger = None
+                            if prev_dtg is not None:
+                                prev_dtg_str = datetime2ecflow(prev_dtg)
+                                trigger = EcflowSuiteTriggers([EcflowSuiteTrigger(prediction_dtg_node[prev_dtg_str]["node"])])
+                            cpfg = EcflowSuiteTask("CopyFG", pert, config, task_settings, ecf_files, triggers=trigger, input_template=template)
                             fg_ready += [EcflowSuiteTrigger(cpfg)]
                             if not da_this:
                                 prep = EcflowSuiteTask("CycleFirstGuess", pert, config, task_settings, ecf_files,triggers=triggers, input_template=template)
@@ -729,7 +733,7 @@ class SurfexSuite:
             if da_this:
                 triggers = EcflowSuiteTriggers(fg_ready +  [EcflowSuiteTrigger(initialization)])
                 letkf = EcflowSuiteFamily("LETKF", dtg_node, ecf_files, triggers=triggers)
-                prep = EcflowSuiteTask("ExternalAssim", letkf, config, task_settings, ecf_files,triggers=triggers, input_template=dask_template)
+                prep = EcflowSuiteTask("ExternalAssim", letkf, config, task_settings, ecf_files,triggers=triggers, input_template=template)
 
                 triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(prep)])
             #####################

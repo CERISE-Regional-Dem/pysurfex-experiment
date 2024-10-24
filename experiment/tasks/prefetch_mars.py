@@ -361,7 +361,7 @@ def prefetch(dts, dest):
 
 def prefetch_synop(dt, dest):
     
-    dt_ = dt - datetime.timedelta(hours=1)
+    dt_ = dt - datetime.timedelta(hours=1.5)
     date = dt_.strftime("%Y%m%d")
     ea_date = datetime.datetime(2002, 1, 1, tzinfo=datetime.timezone.utc)
     time = dt_.strftime("%H")
@@ -378,6 +378,7 @@ def prefetch_synop(dt, dest):
         date    = {date},
         time    = {time_ea},
         area    = 90/0/60/45,
+        range   = 180,
         target  = {target}'''
     else:
         request = f'''retrieve,
@@ -386,7 +387,7 @@ def prefetch_synop(dt, dest):
         obstype = lsd,
         date    = {date},
         time    = {time},
-        range   = 120,
+        range   = 180,
         area    = 90/0/60/45,
         target  = {target}'''
         
