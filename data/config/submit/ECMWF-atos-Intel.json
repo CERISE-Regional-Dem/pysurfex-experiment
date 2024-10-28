@@ -71,7 +71,8 @@
         "ECCODES": "exec(open('/usr/local/apps/lmod/8.6.8/init/env_modules_python.py').read()); module('load', 'ecmwf-toolbox')"
       },
       "BATCH": {
-        "WALLTIME": "#SBATCH --time=00:35:00"
+        "WALLTIME": "#SBATCH --time=02:0:00",
+	"MEMORY": "#SBATCH --mem=100G"
       }
     },
       "Forecast": {
