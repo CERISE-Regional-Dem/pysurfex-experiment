@@ -18,6 +18,8 @@ cryo_step = 2
 cryo_fg_threshold = 0.4
 cryo_new_snow = 0.1
 cryo_var_name = "classed_value_c"
+sigmao_sd = 0.1
+sigmao_t2m = 1.0
 
 [observations.qc]
 # QC_TESTS = ["domain", "blacklist", "nometa", "redundancy", "plausibility", "sct"]
