@@ -299,6 +299,7 @@ class QualityControl(AbstractTask):
         # T2M
         if self.var_name == "t2m":
             synop_obs = self.config.get_value("observations.synop_obs_t2m")
+            sigmao = self.config.get_value("observations.sigmao_t2m")
             data_sets = {}
             if synop_obs:
                 bufr_tests = default_tests
@@ -313,6 +314,7 @@ class QualityControl(AbstractTask):
                             "filetype": "bufr",
                             "varname": ["airTemperatureAt2M"],
                             "tests": bufr_tests,
+                            "sigmao": sigmao
                         }
                     }
                 )
@@ -387,6 +389,7 @@ class QualityControl(AbstractTask):
         elif self.var_name == "sd":
             synop_obs = self.config.get_value("observations.synop_obs_sd")
             cryo_obs = self.config.get_value("observations.cryo_obs_sd")
+            sigmao = self.config.get_value("observations.sigmao_sd")
             data_sets = {}
             if synop_obs:
                 bufr_tests = default_tests
@@ -404,6 +407,7 @@ class QualityControl(AbstractTask):
                             "filetype": "bufr",
                             "varname": ["totalSnowDepth"],
                             "tests": bufr_tests,
+                            "sigmao": sigmao
                         }
                     }
                 )
