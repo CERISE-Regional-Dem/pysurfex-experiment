@@ -78,10 +78,10 @@ class ArchiveECFS(AbstractTask):
                     input_dir = self.platform.substitute(archive_dir, basetime=dt)
                     input_dirp = self.platform.substitute(archive_dir, basetime=dt-fcint)
                     histfile = input_dir + "SURFOUT" + self.suffix
-                    analfile = input_dir + "ANALYSIS_updated" + self.suffix
+                    #analfile = input_dir + "ANALYSIS_summary" + self.suffix
                     diag_file = self.platform.substitute("SURFOUT.@YYYY_LL@@MM_LL@@DD_LL@_@HH_LL@h00.nc", basetime=dt-fcint, validtime=dt)
                     selefile = input_dirp + diag_file
-                    files += [analfile, selefile]
+                    files += [selefile]
 
                     print(i,histfile)
                     if savestate:
