@@ -8,7 +8,7 @@ import yaml
 from netCDF4 import Dataset
 import numpy as np
 import subprocess
-from experiment.datetime_utils import as_datetime
+from experiment.datetime_utils import as_datetime, as_timedelta
 from experiment.tasks import AbstractTask
 
 try:
@@ -56,7 +56,8 @@ class PrefetchMars(AbstractTask):
         kwargs.update({"dtg_start": dtg.strftime("%Y%m%d%H")})
         kwargs.update({"dtg_stop": (dtg + fcint).strftime("%Y%m%d%H")})
         dtg0 = dtg - datetime.timedelta(hours=dtg.hour)
-        dtend = as_datetime(self.config.get_value("general.times.end"))
+        fcint = as_timedelta(self.config.get_value("general.times.cycle_length"))
+        dtend = as_datetime(self.config.get_value("general.times.end")) + fcint
         print(dtend)
         ntimes = int((dtend - dtg0)/datetime.timedelta(hours=3))
         print(ntimes)
@@ -160,7 +161,8 @@ class Request(object):
         f.write(_line('LEVTYPE',self.levtype.upper()))
         f.write(_line('TYPE',self.type.upper()))
         f.write(_line('STREAM',self.stream.upper()))
-        f.write(_line('EXPECT',self.expect, eol=""))
+        f.write(_line('EXPECT',"ANY", eol=""))
+        #f.write(_line('EXPECT',self.expect, eol=""))
 
 
 def _line(key,val,eol=','):

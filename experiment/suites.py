@@ -126,6 +126,13 @@ class SurfexSuite:
         self.suite_name = suite_name
         logger.debug("variables: {}", variables)
         self.suite = EcflowSuite(self.suite_name, ecf_files, variables=variables)
+        
+        skip_because_forcing_exist = None
+        try:
+            if config.get_value("general.rerun"):
+                skip_because_forcing_exist = "complete"
+        except:
+            pass
 
         if config.get_value("compile.build"):
             comp = EcflowSuiteFamily("Compilation", self.suite, ecf_files)
@@ -212,7 +219,8 @@ class SurfexSuite:
         static_complete = EcflowSuiteTrigger(static_data)
 
         prep_complete = None
-        hours_ahead = 24
+        fcint = as_timedelta(config.get_value("general.times.cycle_length"))
+        hours_ahead = fcint*8
         cycle_input_dtg_node = {}
         prediction_dtg_node = {}
         post_processing_dtg_node = {}
@@ -232,7 +240,8 @@ class SurfexSuite:
                 tname = prediction_dtg_node[dtg_str2]["node"]
                 validtime = as_datetime(prediction_dtg_node[dtg_str2]["dtg"])
                 if validtime < dtg:
-                    if validtime + as_timedelta(f"PT{hours_ahead}H") <= dtg:
+                    #if validtime + as_timedelta(f"PT{hours_ahead}H") <= dtg:
+                    if validtime + hours_ahead <= dtg:
                         ahead_trigger = EcflowSuiteTrigger(tname)
 
             if ahead_trigger is None:
@@ -265,6 +274,7 @@ class SurfexSuite:
                     task_settings,
                     ecf_files,
                     input_template=template,
+                    def_status=skip_because_forcing_exist
                 )
             if prefetch is not None:
                 grib_fetched =  EcflowSuiteTriggers([EcflowSuiteTrigger(prefetch)])
@@ -276,7 +286,8 @@ class SurfexSuite:
                 task_settings,
                 ecf_files,
                 input_template=template,
-                triggers=triggers
+                triggers=triggers,
+                def_status=skip_because_forcing_exist
             )
 
             forcing = EcflowSuiteTask(
@@ -286,7 +297,8 @@ class SurfexSuite:
                 task_settings,
                 ecf_files,
                 input_template=template,
-                triggers=grib_fetched
+                triggers=grib_fetched,
+                def_status=skip_because_forcing_exist
             )
             triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(forcing)])
             # move inside forcing task to save queue
@@ -521,7 +533,7 @@ class SurfexSuite:
                         fg4oi_complete = EcflowSuiteTrigger(fg4oi)
                 
                     elif config.get_value("assim.general.do_assim") == True:
-                        analysis = EcflowSuiteFamily("Prepare_obs", initialization, ecf_files)
+                        analysis = EcflowSuiteFamily("Prepare_obs", initialization, ecf_files,def_status=skip_because_forcing_exist)
                         fg4oi = EcflowSuiteTask(
                             "FirstGuess4OI",
                             analysis,
@@ -689,7 +701,8 @@ class SurfexSuite:
                             task_settings,
                             ecf_files,
                             triggers=triggers,
-                            input_template=template)
+                            input_template=template,
+                            def_status=skip_because_forcing_exist)
                     noise_created = EcflowSuiteTriggers([EcflowSuiteTrigger(create_noise)])
                 da_this = False
                 if config.get_value("assim.general.do_assim") == True and dtg > dtgbeg:  # and dtg.hour == 6:
@@ -712,7 +725,7 @@ class SurfexSuite:
                         variables = {"ARGS": args, "ENSMBR": int(m)}
                         pert = EcflowSuiteFamily(name, ens_prep, ecf_files, variables=variables) 
                         if pert_forcing:
-                            EcflowSuiteTask("PerturbForcing", pert, config, task_settings, ecf_files,triggers=noise_created, input_template=template)
+                            EcflowSuiteTask("PerturbForcing", pert, config, task_settings, ecf_files,triggers=noise_created, input_template=template, def_status=skip_because_forcing_exist)
                         if dtg == dtgbeg:
                             prep = EcflowSuiteTask("Prep", pert, config, task_settings, ecf_files,input_template=template)
                         else:
@@ -825,10 +838,10 @@ class SurfexSuite:
 
             prev_dtg = dtg
 
-        hours_behind = 24
+        hours_behind = as_timedelta(config.get_value("general.times.cycle_length"))*8
         for dtg in dtgs:
             dtg_str = datetime2ecflow(dtg)
-            pp_dtg_str = datetime2ecflow(dtg - as_timedelta(f"PT{hours_behind}H"))
+            pp_dtg_str = datetime2ecflow(dtg - hours_behind)
             if pp_dtg_str in post_processing_dtg_node:
                 triggers = EcflowSuiteTriggers(
                     EcflowSuiteTrigger(post_processing_dtg_node[pp_dtg_str])

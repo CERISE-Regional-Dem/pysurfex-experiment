@@ -70,6 +70,7 @@ class createNoise(AbstractTask):
             noisefile_in = input_dir + "%03d/noise_%03d.nc" % (i, i)
             if not os.path.isfile(noisefile_in):
                 noisefile_in = None
+                print("no noise to cycle from")
             noisefile_out = output_dir + "%03d/noise_%03d.nc" % (i, i)
             os.makedirs(output_dir + '%03d' % i, exist_ok=True)
             write_noise(cfg, 

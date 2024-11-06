@@ -5,6 +5,7 @@ import os
 import yaml
 from pysurfex.forcing import modify_forcing, run_time_loop, set_forcing_config
 
+from ..datetime_utils import as_datetime, as_timedelta
 from ..logs import logger
 from ..tasks.tasks import AbstractTask
 
@@ -134,7 +135,10 @@ class Forcing(AbstractTask):
             input_file = forcing_dir.replace( dtg_c, dtg_p )      
             input_file = input_file + "FORCING.nc"
             output_file = forcing_dir + "/FORCING.nc"
-            time_step = -1
+            fcint = int(as_timedelta(self.config.get_value("general.times.cycle_length"))\
+                    .total_seconds()/3600)
+            print("fcint", fcint)
+            time_step = fcint 
             variables = ["LWdown", "DIR_SWdown", "SCA_SWdown"]
             kwargs = {}
 
