@@ -36,7 +36,7 @@ client = ecflow.Client(host, port)
 client.sync_local()
 
 # Define the suite name
-suite_names = ["CARRA_Land_Pv1_v2"]
+suite_names = ["CARRA_Land_Pv1_v2", "CARRA_Land_Pv1_1991"]
 
 sfx_home = "/home/nor3005/sfx_home/"
 program = "/perm/nor3005/github/CERISE_Regional_DEM/CARRA_Land_Pv1_v2/.venv/bin/PySurfexExp"
