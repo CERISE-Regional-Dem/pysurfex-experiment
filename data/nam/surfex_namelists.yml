@@ -7792,6 +7792,10 @@ offline_selected_output:
     - HU2M_ISBA
     - TALB_ISBA
     - ASN_VEG
+    - RUNOFFC_ISBA
+    - DRAINC_ISBA
+    - RUNOFFC
+    - DRAINC
     LSELECT: true
 
 # SODA
