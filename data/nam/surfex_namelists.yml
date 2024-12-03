@@ -7796,6 +7796,13 @@ offline_selected_output:
     - DRAINC_ISBA
     - RUNOFFC
     - DRAINC
+    - GFLUXC_ISBA
+    - LEC_ISBA
+    - HC_ISBA
+    - SWUC_ISBA
+    - LWDC_ISBA
+    - LWUC_ISBA
+    - RNC_ISBA
     LSELECT: true
 
 # SODA

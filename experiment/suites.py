@@ -226,6 +226,7 @@ class SurfexSuite:
         post_processing_dtg_node = {}
         prev_dtg = None
         prefetch = None
+        next_forcing = None
         for __, dtg in enumerate(dtgs):
             dtg_str = datetime2ecflow(dtg)
             variables = {"DTG": dtg_str, "DTGBEG": dtgbeg_str}
@@ -278,6 +279,7 @@ class SurfexSuite:
                 )
             if prefetch is not None:
                 grib_fetched =  EcflowSuiteTriggers([EcflowSuiteTrigger(prefetch)])
+                next_forcing = grib_fetched if next_forcing is None else next_forcing
 
             obs = EcflowSuiteTask(
                 "PrefetchMarsObs",
@@ -297,9 +299,10 @@ class SurfexSuite:
                 task_settings,
                 ecf_files,
                 input_template=template,
-                triggers=grib_fetched,
+                triggers=next_forcing,
                 def_status=skip_because_forcing_exist
             )
+            next_forcing = EcflowSuiteTriggers([EcflowSuiteTrigger(forcing)])
             triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(forcing)])
             # move inside forcing task to save queue
             # if config.get_value("forcing.modify_forcing"):
