@@ -134,6 +134,8 @@ class SurfexSuite:
         except:
             pass
 
+        
+
         if config.get_value("compile.build"):
             comp = EcflowSuiteFamily("Compilation", self.suite, ecf_files)
             if config.get_value("compile.cmake"):
@@ -179,9 +181,13 @@ class SurfexSuite:
         else:
             comp_complete = None
 
+        static_exists = None
+        if os.path.exists(config.get_value("system.climdir")+"/PGD.nc"):
+            static_exists= "complete"
+
         triggers = EcflowSuiteTriggers([comp_complete])
         static_data = EcflowSuiteFamily(
-            "StaticData", self.suite, ecf_files, triggers=triggers
+            "StaticData", self.suite, ecf_files, triggers=triggers, def_status=static_exists
         )
 
         pgd_input = EcflowSuiteFamily("PgdInput", static_data, ecf_files)
@@ -217,6 +223,7 @@ class SurfexSuite:
         )
 
         static_complete = EcflowSuiteTrigger(static_data)
+
 
         prep_complete = None
         fcint = as_timedelta(config.get_value("general.times.cycle_length"))

@@ -93,6 +93,7 @@ class Forcing(AbstractTask):
         debug = self.config.get_value("forcing.debug")
         timestep = self.config.get_value("forcing.timestep")
         interpolation = self.config.get_value("forcing.interpolation")
+        diskless_write = self.config.get_value("forcing.diskless_write")
 
         kwargs.update({"input_format": input_format})
         kwargs.update({"pattern": pattern})
@@ -116,9 +117,12 @@ class Forcing(AbstractTask):
         kwargs.update({"timestep": timestep})
         kwargs.update({"analysis": analysis})
         kwargs.update({"interpolation": interpolation})
+        kwargs.update({"diskless_write": diskless_write})
 
+        skip_modify = False
         if os.path.exists(output):
             logger.info("Output already exists: {}", output)
+            skip_modify = True
         else:
             options, var_objs, att_objs = set_forcing_config(**kwargs)
             run_time_loop(options, var_objs, att_objs)
@@ -146,7 +150,7 @@ class Forcing(AbstractTask):
             kwargs.update({"output_file": output_file})
             kwargs.update({"time_step": time_step})
             kwargs.update({"variables": variables})
-            if os.path.exists(output_file) and os.path.exists(input_file):
+            if os.path.exists(output_file) and os.path.exists(input_file) and not skip_modify:
                 modify_forcing(**kwargs)
             else:
                 logger.info("Output or input is missing: {}", output_file)
