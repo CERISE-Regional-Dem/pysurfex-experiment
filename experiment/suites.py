@@ -751,6 +751,12 @@ class SurfexSuite:
                         if pert_state:
                             EcflowSuiteTask("PerturbState", pert, config, task_settings, ecf_files,triggers=triggers, input_template=template)
 
+                        
+                        makeData = EcflowSuiteTask("MakeObsOpData", pert, config, task_settings, ecf_files, triggers=trigger, input_template=template)
+                        trigger = triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(makeData)])
+                        obsOp = EcflowSuiteTask("ObsOp", pert, config, task_settings, ecf_files, triggers=trigger, input_template=template)
+
+
                 triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(ens_prep)])
             
             if da_this:
