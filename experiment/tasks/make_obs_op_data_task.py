@@ -3,15 +3,11 @@ import os
 import shutil
 from datetime import timedelta
 import json
-#import logging
 import yaml
 from netCDF4 import Dataset
 import numpy as np
-#from sfcpert.letkf_exp import run_enkf
 from obsOp.Training_data_static import makeData
-
 from experiment.tasks import AbstractTask
-
 
 class MakeObsOpData(AbstractTask):
     """Perturb state task."""
@@ -42,17 +38,10 @@ class MakeObsOpData(AbstractTask):
         mbr = self.config.get_value("general.realization")
 
         kwargs = {}
-        #if self.user_config is not None:
-        #    user_config = yaml.safe_load(open(self.user_config, mode="r", encoding="utf-8"))
-        #    kwargs.update({"user_config": user_config})
-
-        #with open(self.wdir + "/domain.json", mode="w", encoding="utf-8") as file_handler:
-        #    json.dump(self.geo.json, file_handler, indent=2)
-        #kwargs.update({"domain": self.wdir + "/domain.json"})
         
         kwargs.update({"dtg_start": dtg.strftime("%Y%m%d%H")})
         kwargs.update({"dtg_stop": (dtg + fcint).strftime("%Y%m%d%H")})
-        #mbr = self.config.get_value("general.realization")
+
         nens = len(self.config.get_value("forecast.ensmsel"))
         archive_dir = self.config.get_value("system.archive_dir")
         first_guess_dir = self.platform.substitute(archive_dir, basetime=self.fg_dtg)
@@ -60,50 +49,25 @@ class MakeObsOpData(AbstractTask):
  
         obpattern = self.config.get_value("assim.general.obpath")
         obpattern = self.platform.substitute(obpattern, basetime=self.dtg)
-        hofxpattern = self.config.get_value("assim.general.hofxpath")
-        print(hofxpattern)
-        hofxpattern = self.platform.substitute(hofxpattern, basetime=self.dtg - self.fcint, validtime=self.dtg)
-        bgpattern = first_guess_dir + "@mbr@/" + "SURFOUT" + self.suffix
-        #anpattern = ana_dir + "@mbr@/" + "ANALYSIS" + self.suffix
-        #imp_r = self.config.get_value("assim.localization.horizontal_gp")
-        #vert_d = self.config.get_value("assim.localization.vertical_m")
-        #cfg_dict = self.config.get_value("assim.control").dict()
-        #cfg_file = "cfg_assim.json" 
-        #print(cfg_dict)
-        #with open(cfg_file, "w") as f:
-        #    json.dump(cfg_dict, f)
-        #cfg_file = self.platform.substitute(self.config.get_value("assim.config"))
-        print(bgpattern)
-        #print(anpattern)
-        print("hofx",hofxpattern)
-        print(obpattern)
-        
-        #print(cfg_file)
-        #domain = {
-        #    "xlon0": self.geo.xlon0,
-        #    "xlat0": self.geo.xlat0,
-        #    "xlatcen": self.geo.xlatcen,
-        #    "xloncen": self.geo.xloncen,
-        #    "nimax": self.geo.nimax,
-        #    "njmax": self.geo.njmax,
-        #    "xdx": self.geo.xdx}
+        hofxpattern = self.config.get_value("assim.general.hofxpath")        
+        hofxpattern = self.platform.substitute(hofxpattern, basetime=self.dtg - self.fcint, validtime=self.dtg)        
 
+        bgpattern = first_guess_dir + "@mbr@/" + "SURFOUT" + self.suffix
+        sfxpattern = self.config.get_value("assim.general.sfxpath")        
+        sfxpattern = self.platform.substitute(sfxpattern, basetime=self.dtg - self.fcint, validtime=self.dtg)
+
+        meps_dir = self.config.get_value("system.meps_data")
+        meps_pattern =  self.platform.substitute(meps_dir, basetime=self.dtg)
+                
         csurf_filetype = self.config.get_value("SURFEX.IO.CSURF_FILETYPE").lower()
         pgdfile = self.config.get_value("system.climdir") + "/PGD." + csurf_filetype
-        print("PGD:", pgdfile)
-        print("member: ")
-        print(mbr)
+                
         mbrin = "%03d" % int(mbr)
-        
+
+        satpattern = self.config.get_value("system.satpath")            
         date_start = dtg.strftime("%Y%m%d")
         date_stop = date_start
-        makeData(mbrin, date_start, date_stop)
         
-        #for i in range(nens):
-        #    fc_start_sfx = self.wrk + "%03d" % i + "/fc_start_sfx"
-        #    os.makedirs(os.path.dirname(fc_start_sfx), exist_ok=True)
-        #    if os.path.islink(fc_start_sfx):
-        #        os.unlink(fc_start_sfx)
-        #    os.symlink(anpattern.replace("@mbr@", "%03d" % i), fc_start_sfx)
+        makeData(mbrin, date_start, date_stop, pgdfile, satpattern, hofxpattern, ana_dir, meps_pattern, sfxpattern)        
 
 

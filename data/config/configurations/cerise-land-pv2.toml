@@ -1,0 +1,207 @@
+# Start on namelist
+
+[general]
+arhive_ecfs = true
+ecfs_pattern = "ec:sfx_data/@case@/@YYYY@/"
+archive_hours = ["00", "03", "06", "09", "12", "15", "18", "21"]
+
+[domain]
+name = "CARRA_NE"
+nimax = 800
+njmax = 1000
+xloncen = 26.0
+xlatcen = 74.0
+xdx = 2500.0
+xdy = 2500.0
+ilone = 0
+ilate = 0
+xlon0 = -34.0
+xlat0 = 80.0
+
+
+[initial_conditions]
+prep_input_file = ""
+prep_pgdfile = ""
+
+[initial_conditions.fg4oi]
+inputfile = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/SURFOUT.nc"
+fileformat = "surfex"
+user_config = "@pysurfex_experiment@/data/config/first_guess.yml"
+
+[initial_conditions.fg4oi.altitude]
+inputfile = "@sfx_exp_data@/climate/PGD.nc"
+converter = "none"
+fileformat = "surfex"
+[initial_conditions.fg4oi.surface_snow_thickness]
+inputfile = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/SURFOUT.@YYYY_LL@@MM_LL@@DD_LL@_@HH_LL@h00.nc"
+converter = "none"
+fileformat = "surfex"
+[initial_conditions.fg4oi.land_area_fraction]
+inputfile = "@sfx_exp_data@/climate/PGD.nc"
+converter = "nature_town"
+fileformat = "surfex"
+[initial_conditions.fg4oi.air_temperature_2m]
+inputfile = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/SURFOUT.@YYYY_LL@@MM_LL@@DD_LL@_@HH_LL@h00.nc"
+converter = "none"
+fileformat = "surfex"
+
+[forecast]
+#####################################################################################################
+#  Forecast model (physics + dynamics and output)
+#####################################################################################################
+
+physics = "arome"
+ensmsel = [0,1,2,3,4,5,6,7,8,9]          # Ensemble members to run (list with member numbers)
+
+forc_zs = true
+
+[eps]
+pert_forcing = true
+pert_state = false
+tau = 86400
+remap_precip = true  
+
+[eps.offline.noise]
+correlation_matrix = [ [ 1.0, -0.0663611, 0.177329, 0.09092014, 0.12285594,], [ -0.0663611, 1.0, -0.24639098, -0.06129621, 0.15581132,], [ 0.177329, -0.24639098, 1.0, 0.07822633, 0.49344876,], [ 0.09092014, -0.06129621, 0.07822633, 1.0, -0.12753072,], [ 0.12285594, 0.15581132, 0.49344876, -0.12753072, 1.0,],]
+standard_deviation = [ 1.0, 1.0, 1.0, 1.0, 1.0,]
+spatial_correlation_length = 160
+temporal_correlation_length = 86400
+
+[[eps.offline.noise.variables]]
+name = "Rainf"
+method = "mul"
+coef = 0.5
+
+[[eps.offline.noise.variables]]
+name = "DIR_SWdown"
+method = "mul"
+coef = 0.3
+
+[[eps.offline.noise.variables]]
+name = "LWdown"
+method = "add"
+coef = 30.0
+
+[[eps.offline.noise.variables]]
+name = "Snowf"
+method = "mul"
+coef = 0.5
+
+[[eps.offline.noise.variables]]
+name = "Tair"
+method = "add"
+coef = 0.5
+
+
+[assim]
+
+[assim.general]
+do_assim = true
+hofxpath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@mbr@/SURFOUT.@YYYY_LL@@MM_LL@@DD_LL@_@HH_LL@h00.nc"
+obpath = "@sfx_exp_data@/archive/observations/@YYYY@/@MM@/@DD@/@HH@/qc_@obtype@.json"
+
+[assim.control.observation_vector.airTemperatureAt2M]
+assimilate = true
+
+[assim.control.observation_vector.totalSnowDepth]
+assimilate = true
+
+[assim.control.control_vector."WSN_VEG@level@"]
+assimilate = true
+levels = "1-12"
+
+[assim.control.control_vector."RSN_VEG@level@"]
+assimilate = true
+levels = "1-12"
+
+[assim.control.control_vector."HSN_VEG@level@"]
+assimilate = true
+levels = "1-12"
+
+[assim.control.control_vector."SAG_VEG@level@"]
+assimilate = false
+levels = "1-12"
+
+[assim.control.control_vector.ASN_VEG]
+assimilate = false
+
+[assim.localization]
+horizontal_gp = 20
+vertical_m = 200
+
+[forcing]
+pattern = "@sfx_exp_data@/grib/carra_@YYYY@@MM@@DD@T@HH@Z_@LLL@.grib2"
+user_config = "@pysurfex_experiment@/data/config/forcing_config.yml"
+input_format = "grib2"
+input_geo_file = ""
+zref = "ml"
+zval = "constant"
+uref = "screen"
+uval = "constant"
+qa_converter = "none"
+zsoro_converter = "none"
+rain_converter = "totalprec"
+snow_converter = "none"
+dir_sw_converter = "none"
+sca_sw_converter = "diff"
+sca_sw = "grib2"
+lw_converter = "none"
+co2 = "constant"
+wind_converter = "none"
+winddir_converter = "none"
+ps_converter = "none"
+debug = true
+timestep = 3600
+analysis = false
+modify_forcing = true
+interpolation = "bilinear"
+
+[SURFEX.IO]
+CSURF_FILETYPE = "NC"
+CTIMESERIES_FILETYPE = "NC"         # Fileformat for timseries. Inline runs use FA
+LSELECT = true                      # Only write selected diagnostics
+XTSTEP_OUTPUT = 10800.0             # Output interval from the binary OFFLINE
+LSPLIT_PATCH = false                # Split patches into separate variables in output files
+
+ 
+[SURFEX.COVER]                      # Land cover information
+YCOVER = "ecosg_final_map"          # Version of ECOCLIMAP for surfex (1,2,SG)
+SG = true                           # ECOCLIMAP second generation
+
+[SURFEX.ISBA]
+SCHEME = "DIF"                      # Type of ISBA scheme in SURFEX. Options: "3-L"|"2-L"|"DIF"
+MEB = true                          # Enable Multi Energy Budget (MEB) model
+SNOW = "3-L"                        # Type of snow scheme in SURFEX. Options: "D95" and "3-L"
+YSAND = "SAND_SOILGRID"             # Soil texture input data: "sand_fao.dir"|"SAND_HWSD_MOY_V2.dir"|"sand_SOILGRID.dir"
+YCLAY = "CLAY_SOILGRID"             # Soil texture input data: "clay_fao.dir"|"CLAY_HWSD_MOY_V2.dir"|"clay_SOILGRID.dir"
+
+[SURFEX.PARAMETERS]
+XRIMAX = 0.0                        # Maximum allowed Richardson number in the surface layer
+
+[SURFEX.ASSIM.SCHEMES]
+# SEA = "INPUT" not implemented offline yet
+SEA = "NONE"                         # Assimilation method for sea tile: "INPUT"|"NONE"
+INLAND_WATER = "NONE"               # Assimilation method for water tile: "INPUT"|"NONE"
+ISBA = "NONE"                         # Assimilation method for ISBA soil: "NONE"|"OI"|"EKF"
+TEB = "NONE"                        # Assimilation method for TEB tile: "NONE"|"ROADT"
+
+[SURFEX.TILES]
+SEA = "NONE"
+TOWN = "NONE"
+INLAND_WATER = "NONE"
+NATURE = "ISBA"
+
+[SURFEX.ASSIM.ISBA.EKF]
+NNCV = [0,1,0,1]                             # Active EKF control variables
+XSIGMA_M = [2.0, 2.0, 0.1 , 0.15]            # Background error
+CVAR_M = ["TG1", "TG2", "WG1" , "WG2"]       # Control variables
+XTPRT_M = [0.0001, 0.0001, 0.00001, 0.00001] # Perturbation magnitude
+LLINCHECK = true
+
+[SURFEX.ASSIM.ISBA]
+UPDATE_SNOW_CYCLES = ["00","03","06","09","12","15","18","21"]          # Cycles to update snow depths/SWE in assimilation.
+ 
+[SURFEX.ASSIM.OBS]
+COBS_M = ["SWE"]
+NNCO = [1, 0, 0, 0, 0]
+XERROBS_M = [1.0, 0.1, 0.1, 0.1, 20.0]
