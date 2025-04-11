@@ -56,18 +56,18 @@ class MakeObsOpData(AbstractTask):
         sfxpattern = self.config.get_value("assim.general.sfxpath")        
         sfxpattern = self.platform.substitute(sfxpattern, basetime=self.dtg - self.fcint, validtime=self.dtg)
 
-        meps_dir = self.config.get_value("system.meps_data")
-        meps_pattern =  self.platform.substitute(meps_dir, basetime=self.dtg)
+        #meps_dir = self.config.get_value("system.meps_data")
+        #meps_pattern =  self.platform.substitute(meps_dir, basetime=self.dtg)
                 
         csurf_filetype = self.config.get_value("SURFEX.IO.CSURF_FILETYPE").lower()
         pgdfile = self.config.get_value("system.climdir") + "/PGD." + csurf_filetype
                 
         mbrin = "%03d" % int(mbr)
 
-        satpattern = self.config.get_value("system.satpath")            
+        satpattern = self.config.get_value("observations.satpath")            
         date_start = dtg.strftime("%Y%m%d")
         date_stop = date_start
         
-        makeData(mbrin, date_start, date_stop, pgdfile, satpattern, hofxpattern, ana_dir, meps_pattern, sfxpattern)        
+        makeData(mbrin, date_start, date_stop, pgdfile, satpattern, hofxpattern, ana_dir, sfxpattern)        
 
 
