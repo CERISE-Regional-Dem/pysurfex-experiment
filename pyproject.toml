@@ -34,8 +34,8 @@ SubmitTask = "experiment.cli:run_submit_cmd_exp"
     troika = {git = "https://git.ecmwf.int/scm/ecsdk/troika.git", tag="0.1.8"}
     pysurfex = {git = "https://github.com/metno/pysurfex.git", develop=true, branch="master", extras=["points", "formats"]}
     loguru = "^0.7.2"
-    sfcpert = {git = "git@github.com:josteinblyverket/CERISE-sfcpert.git", develop = true, branch="ppi_amsr2"}
-    obsop = {git = "git@github.com:josteinblyverket/obsOp.git", develop = true, branch="master"}
+    sfcpert = {git = "git@github.com:CERISE-Regional-Dem/sfcpert.git", develop = true, branch="main"}
+    obsop = {git = "git@github.com:CERISE-Regional-Dem/obsOp.git", develop = true, branch="atos_dev"}
     scikit-learn = "^1.6.1"
     dask = "^2025.1.0"
     distributed = "^2025.1.0"

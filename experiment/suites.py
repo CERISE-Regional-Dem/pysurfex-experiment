@@ -751,7 +751,8 @@ class SurfexSuite:
                         if pert_state:
                             EcflowSuiteTask("PerturbState", pert, config, task_settings, ecf_files,triggers=triggers, input_template=template)
 
-                        if dtg.hour == 6 and dtg != dtgbeg:
+                        # TODO remove hardcoding
+                        if dtg.hour == 3 and dtg != dtgbeg:
                             makeData = EcflowSuiteTask("MakeObsOpData", pert, config, task_settings, ecf_files, triggers=trigger, input_template=template)
                             trigger = EcflowSuiteTriggers([EcflowSuiteTrigger(makeData)])
                             obsOp = EcflowSuiteTask("ObsOp", pert, config, task_settings, ecf_files, triggers=trigger, input_template=template)
