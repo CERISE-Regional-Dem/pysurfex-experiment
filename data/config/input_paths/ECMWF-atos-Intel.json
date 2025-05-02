@@ -17,5 +17,5 @@
   "albvis_veg_dir": "/ec/res4/hpcperm/hlam/data/climate/ECOCLIMAP-SG/ALB_SAT/",
   "tree_height_dir": "/ec/res4/hpcperm/hlam/data/climate/ECOCLIMAP-SG/HT/",
   "lai_dir": "/ec/res4/hpcperm/hlam/data/climate/ECOCLIMAP-SG/LAI_SAT/",
-    "oro_dir": "/scratch/sbu/sfx_data/test_default/climate/"    
+  "oro_dir": "/scratch/sbu/sfx_data/test_default/climate/"
 }
