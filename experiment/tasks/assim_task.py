@@ -66,9 +66,14 @@ class ExternalAssim(AbstractTask):
         hofxpattern = self.platform.substitute(hofxpattern, basetime=self.dtg - self.fcint, validtime=self.dtg)
         bgpattern = first_guess_dir + "@mbr@/" + "SURFOUT" + self.suffix
         anpattern = ana_dir + "@mbr@/" + "ANALYSIS" + self.suffix
-        imp_r = self.config.get_value("assim.localization.horizontal_gp")
+        imp_r = self.config.get_value("assim.localization.horizontal_m")
         vert_d = self.config.get_value("assim.localization.vertical_m")
         cfg_dict = self.config.get_value("assim.control").dict()
+        for obstype in cfg_dict["observation_vector"]:
+            if "filepath" in cfg_dict["observation_vector"][obstype]:
+                gpath = cfg_dict["observation_vector"][obstype]["filepath"]
+                fpath = self.platform.substitute(gpath, basetime=self.dtg)
+                cfg_dict["observation_vector"][obstype]["filepath"] = fpath
         cfg_file = "cfg_assim.json" 
         print(cfg_dict)
         with open(cfg_file, "w") as f:

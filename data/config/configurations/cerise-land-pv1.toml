@@ -105,6 +105,7 @@ assimilate = false
 
 [assim.control.observation_vector.totalSnowDepth]
 assimilate = true
+filepath = "@sfx_exp_data@/archive/observations/@YYYY@/@MM@/@DD@/@HH@/qc_surface_snow_thickness.json"
 
 [assim.control.control_vector."WSN_VEG@level@"]
 assimilate = true
@@ -126,7 +127,7 @@ levels = "1-12"
 assimilate = false
 
 [assim.localization]
-horizontal_gp = 20
+horizontal_m = 50000
 vertical_m = 200
 
 [forcing]
@@ -155,6 +156,7 @@ timestep = 3600
 analysis = false
 modify_forcing = true
 interpolation = "bilinear"
+diskless_write = true
 
 [SURFEX.IO]
 CSURF_FILETYPE = "NC"
