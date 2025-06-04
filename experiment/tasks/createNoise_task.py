@@ -65,7 +65,7 @@ class createNoise(AbstractTask):
         with Dataset(input_file) as f:
             N = f.dimensions["Number_of_points"].size
             T = f.dimensions["time"].size
-
+        # TODO parallelize 
         for i in range(nens):
             noisefile_in = input_dir + "%03d/noise_%03d.nc" % (i, i)
             if not os.path.isfile(noisefile_in):
@@ -73,14 +73,15 @@ class createNoise(AbstractTask):
                 print("no noise to cycle from")
             noisefile_out = output_dir + "%03d/noise_%03d.nc" % (i, i)
             os.makedirs(output_dir + '%03d' % i, exist_ok=True)
+            print(dir(self.geo))
             write_noise(cfg, 
                     T, 
                     dt, 
                     N, 
                     noisefile_out, 
                     input_file=noisefile_in, 
-                    ny=self.geo.nlats, 
-                    nx=self.geo.nlons)
+                    ny=self.geo.nlats - self.geo.ilate, 
+                    nx=self.geo.nlons - self.geo.ilone)
 
 
 def main():

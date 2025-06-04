@@ -133,9 +133,7 @@ class SurfexSuite:
                 skip_because_forcing_exist = "complete"
         except:
             pass
-
         
-
         if config.get_value("compile.build"):
             comp = EcflowSuiteFamily("Compilation", self.suite, ecf_files)
             if config.get_value("compile.cmake"):
@@ -275,15 +273,27 @@ class SurfexSuite:
             )
             cycle_input_dtg_node.update({dtg_str: cycle_input})
             if dtg == dtgs[0]:
-                prefetch = EcflowSuiteTask(
-                    "PrefetchMars",
-                    cycle_input,
-                    config,
-                    task_settings,
-                    ecf_files,
-                    input_template=template,
-                    def_status=skip_because_forcing_exist
-                )
+                if config.get_value("general.forcing_from_mars"):
+                    prefetch = EcflowSuiteTask(
+                        "PrefetchMars",
+                        cycle_input,
+                        config,
+                        task_settings,
+                        ecf_files,
+                        input_template=template,
+                        def_status=skip_because_forcing_exist
+                    )
+                elif config.get_value("general.forcing_from_ecfs"):
+                    prefetch = EcflowSuiteTask(
+                        "PrefetchECFS",
+                        cycle_input,
+                        config,
+                        task_settings,
+                        ecf_files,
+                        input_template=template,
+                        def_status=skip_because_forcing_exist
+                    )
+
             if prefetch is not None:
                 grib_fetched =  EcflowSuiteTriggers([EcflowSuiteTrigger(prefetch)])
                 next_forcing = grib_fetched if next_forcing is None else next_forcing
@@ -298,6 +308,9 @@ class SurfexSuite:
                 triggers=triggers,
                 def_status=skip_because_forcing_exist
             )
+            forc_def = skip_because_forcing_exist
+            if config.get_value("general.forcing_from_ecfs"):
+                forc_def = "complete"
 
             forcing = EcflowSuiteTask(
                 "Forcing",
@@ -307,21 +320,11 @@ class SurfexSuite:
                 ecf_files,
                 input_template=template,
                 triggers=next_forcing,
-                def_status=skip_because_forcing_exist
+                def_status=forc_def
             )
+
             next_forcing = EcflowSuiteTriggers([EcflowSuiteTrigger(forcing)])
             triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(forcing)])
-            # move inside forcing task to save queue
-            # if config.get_value("forcing.modify_forcing"):
-            #     EcflowSuiteTask(
-            #         "ModifyForcing",
-            #         cycle_input,
-            #         config,
-            #         task_settings,
-            #         ecf_files,
-            #         input_template=template,
-            #         triggers=triggers,
-            #     )
 
             triggers = EcflowSuiteTriggers([static_complete, prepare_cycle_complete])
             if prev_dtg is not None:
@@ -381,6 +384,16 @@ class SurfexSuite:
                         triggers=triggers,
                         input_template=template,
                     )
+                    EcflowSuiteTask(
+                        "CopyFG",
+                        initialization,
+                        config,
+                        task_settings,
+                        ecf_files,
+                        triggers=triggers,
+                        input_template=template,
+                    )
+
 
                     perturbations = None
                     logger.debug(
@@ -751,7 +764,7 @@ class SurfexSuite:
                         if pert_state:
                             EcflowSuiteTask("PerturbState", pert, config, task_settings, ecf_files,triggers=triggers, input_template=template)
 
-                        # TODO remove hardcoding
+                        # TODO remove hardcoding, and add switch?
                         if dtg.hour == 3 and dtg != dtgbeg:
                             makeData = EcflowSuiteTask("MakeObsOpData", pert, config, task_settings, ecf_files, triggers=trigger, input_template=template)
                             trigger = EcflowSuiteTriggers([EcflowSuiteTrigger(makeData)])

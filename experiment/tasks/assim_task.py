@@ -3,6 +3,7 @@ import os
 import shutil
 from datetime import timedelta
 import json
+import glob
 #import logging
 import yaml
 from netCDF4 import Dataset
@@ -61,9 +62,9 @@ class ExternalAssim(AbstractTask):
  
         obpattern = self.config.get_value("assim.general.obpath")
         obpattern = self.platform.substitute(obpattern, basetime=self.dtg)
-        hofxpattern = self.config.get_value("assim.general.hofxpath")
-        print(hofxpattern)
+        hofxpattern = self.config.get_value("assim.general.hofxpath").replace("@RRR@", "@mbr@")
         hofxpattern = self.platform.substitute(hofxpattern, basetime=self.dtg - self.fcint, validtime=self.dtg)
+        print(hofxpattern)
         bgpattern = first_guess_dir + "@mbr@/" + "SURFOUT" + self.suffix
         anpattern = ana_dir + "@mbr@/" + "ANALYSIS" + self.suffix
         imp_r = self.config.get_value("assim.localization.horizontal_m")
@@ -108,6 +109,8 @@ class ExternalAssim(AbstractTask):
                 vert_d=vert_d, 
                 write_cv=True, 
                 topofile=pgdfile,
+                dask_jobs=nens,
+                save_ensemble_mean=True,
                 filetype=csurf_filetype)
         
         for i in range(nens):
@@ -116,6 +119,13 @@ class ExternalAssim(AbstractTask):
             if os.path.islink(fc_start_sfx):
                 os.unlink(fc_start_sfx)
             os.symlink(anpattern.replace("@mbr@", "%03d" % i), fc_start_sfx)
+            print(ana_dir)
+        try:
+            obs_use_files = glob.glob("obs_usage*.npy")
+            for f in obs_use_files:
+                shutil.move(f, ana_dir.replace("@mbr@", "") + os.path.basename(f))
+        except Exception as e:
+            print(e)
 
 
 

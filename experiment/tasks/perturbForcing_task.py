@@ -85,7 +85,12 @@ class PerturbForcing(AbstractTask):
             print("call perturb atm forcing for mbr %s" % mbr)
             perturb_forcing(input_forcing_file, noise_file, output, cfg)
             if self.config.get_value("eps.remap_precip") == True:
-                remap_precip(output, self.geo.nlats, self.geo.nlons, 200, 4, keep_orographic=True)
+                remap_precip(output,
+                             self.geo.nlats - self.geo.ilate, 
+                             self.geo.nlons - self.geo.ilone, 
+                             200, 
+                             4, 
+                             keep_orographic=True)
         else:
             os.makedirs(forcing_dir, exist_ok=True)
             shutil.copyfile(input_forcing_file, output)

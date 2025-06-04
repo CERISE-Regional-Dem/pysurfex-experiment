@@ -6,17 +6,17 @@ ecfs_pattern = "ec:sfx_data/@case@/@YYYY@/"
 archive_hours = ["00", "03", "06", "09", "12", "15", "18", "21"]
 
 [domain]
-name = "CARRA_NE"
-nimax = 800
-njmax = 1000
-xloncen = 26.0
-xlatcen = 74.0
+name = "CARRA2_2500"
+nimax = 2869
+njmax = 2869
+xloncen = -45.0
+xlatcen = 84.0
 xdx = 2500.0
 xdy = 2500.0
 ilone = 0
 ilate = 0
-xlon0 = -34.0
-xlat0 = 80.0
+xlon0 = -30.0
+xlat0 = 90.0
 
 
 [initial_conditions]
@@ -103,9 +103,11 @@ sfxpath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@RRR@/SURFOUT.nc"
 
 [assim.control.observation_vector.airTemperatureAt2M]
 assimilate = true
+filepath = "@sfx_exp_data@/archive/observations/@YYYY@/@MM@/@DD@/@HH@/qc_air_temperature_2m.json"
 
 [assim.control.observation_vector.totalSnowDepth]
 assimilate = true
+filepath = "@sfx_exp_data@/archive/observations/@YYYY@/@MM@/@DD@/@HH@/qc_surface_snow_thickness.json"
 
 [assim.control.control_vector."WSN_VEG@level@"]
 assimilate = true
@@ -135,7 +137,7 @@ assimilate = true
 levels = "1-3"
 
 [assim.localization]
-horizontal_gp = 20
+horizontal_m = 50000
 vertical_m = 200
 
 [assim.ObsOp]
@@ -166,7 +168,7 @@ ps_converter = "none"
 debug = true
 timestep = 3600
 analysis = false
-modify_forcing = true
+modify_forcing = false
 interpolation = "bilinear"
 diskless_write = true
 
@@ -216,6 +218,6 @@ LLINCHECK = true
 UPDATE_SNOW_CYCLES = ["00","03","06","09","12","15","18","21"]          # Cycles to update snow depths/SWE in assimilation.
  
 [SURFEX.ASSIM.OBS]
-COBS_M = ["SWE"]
-NNCO = [1, 0, 0, 0, 0]
-XERROBS_M = [1.0, 0.1, 0.1, 0.1, 20.0]
+COBS_M = ["SWE", "T2M"]
+NNCO = [1, 1, 0, 0, 0]
+XERROBS_M = [0.1, 1.0, 0.1, 0.1, 20.0]
