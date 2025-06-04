@@ -103,9 +103,11 @@ sfxpath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@RRR@/SURFOUT.nc"
 
 [assim.control.observation_vector.airTemperatureAt2M]
 assimilate = true
+filetype = "@sfx_exp_data@/archive/observations/@YYYY@/@MM@/@DD@/@HH@/qc_@obtype@.json"
 
 [assim.control.observation_vector.totalSnowDepth]
 assimilate = true
+filetype = "@sfx_exp_data@/archive/observations/@YYYY@/@MM@/@DD@/@HH@/qc_@obtype@.json"
 
 [assim.control.control_vector."WSN_VEG@level@"]
 assimilate = true
@@ -139,8 +141,9 @@ horizontal_gp = 20
 vertical_m = 200
 
 [assim.ObsOp]
-modeldir = "/ec/res4/scratch/sbjb/Projects/CERISE/GNN/v8/"
-normdir = "/ec/res4/scratch/sbjb/Projects/CERISE/GNN/"
+modeldir = "/ec/res4/hpcperm/sbjb/Projects/CERISE/GNN/CARRA_East/v16/model/"
+normdir = "/ec/res4/hpcperm/sbjb/Projects/CERISE/GNN/CARRA_East/v16/norm/"
+channel_list = ["10.7","18.7","36.5"]
 
 [forcing]
 pattern = "@sfx_exp_data@/grib/carra_@YYYY@@MM@@DD@T@HH@Z_@LLL@.grib2"
@@ -216,6 +219,6 @@ LLINCHECK = true
 UPDATE_SNOW_CYCLES = ["00","03","06","09","12","15","18","21"]          # Cycles to update snow depths/SWE in assimilation.
  
 [SURFEX.ASSIM.OBS]
-COBS_M = ["SWE"]
-NNCO = [1, 0, 0, 0, 0]
+COBS_M = ["SWE", "T2M"]
+NNCO = [1, 1, 0, 0, 0]
 XERROBS_M = [1.0, 0.1, 0.1, 0.1, 20.0]
