@@ -66,5 +66,9 @@ class ObsOp(AbstractTask):
         date_start = dtg.strftime("%Y%m%d")
         date_stop = date_start
 
-        run_GNN(mbrin, date_start, date_stop, ana_dir, pgdfile, normdir, modeldir)
+        channel_list = self.config.get_value("assim.ObsOp.channel_list") #["18.7"] #["10.7", "18.7", "36.5"]
+        
+        for channel_freq in channel_list:
+
+            run_GNN(mbrin, date_start, date_stop, ana_dir, pgdfile, normdir, modeldir, channel_freq)
 

@@ -67,7 +67,11 @@ class MakeObsOpData(AbstractTask):
         satpattern = self.config.get_value("observations.satpath")            
         date_start = dtg.strftime("%Y%m%d")
         date_stop = date_start
+
+        channel_list = self.config.get_value("assim.ObsOp.channel_list")
         
-        makeData(mbrin, date_start, date_stop, pgdfile, satpattern, hofxpattern, ana_dir, sfxpattern)        
+        for channel_freq in channel_list:
+
+            makeData(mbrin, date_start, date_stop, pgdfile, satpattern, hofxpattern, ana_dir, sfxpattern, channel_freq)
 
 
