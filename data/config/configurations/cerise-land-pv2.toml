@@ -4,6 +4,9 @@
 arhive_ecfs = true
 ecfs_pattern = "ec:sfx_data/@case@/@YYYY@/"
 archive_hours = ["00", "03", "06", "09", "12", "15", "18", "21"]
+forcing_from_mars = false
+forcing_from_ecfs = true
+ecfs_forc_path = "ec:/sbjb/CARRA2_forcing/2014_stream/forcing_@YYYY@@MM@@DD@00.tar"
 
 [domain]
 name = "CARRA2_2500"
@@ -104,10 +107,24 @@ sfxpath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@RRR@/SURFOUT.nc"
 [assim.control.observation_vector.airTemperatureAt2M]
 assimilate = true
 filepath = "@sfx_exp_data@/archive/observations/@YYYY@/@MM@/@DD@/@HH@/qc_air_temperature_2m.json"
+horizontal_m = 30000
+vertical_m = 200
 
 [assim.control.observation_vector.totalSnowDepth]
 assimilate = true
 filepath = "@sfx_exp_data@/archive/observations/@YYYY@/@MM@/@DD@/@HH@/qc_surface_snow_thickness.json"
+horizontal_m = 30000
+vertical_m = 200
+
+[assim.control.observation_vector.AMSR2_BT18_7H]
+assimilate = true
+filepath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@mbr@/Predictions_@YYYY@@MM@@DD@.nc"
+horizontal_m = 9000
+
+[assim.control.observation_vector.AMSR2_BT18_7V]
+assimilate = true
+filepath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@mbr@/Predictions_@YYYY@@MM@@DD@.nc"
+horizontal_m = 9000
 
 [assim.control.control_vector."WSN_VEG@level@"]
 assimilate = true
@@ -172,6 +189,7 @@ analysis = false
 modify_forcing = false
 interpolation = "bilinear"
 diskless_write = true
+
 
 [SURFEX.IO]
 CSURF_FILETYPE = "NC"

@@ -150,7 +150,7 @@
           "CPUS": "#SBATCH --ntasks=1"
         }
       },
-      "create_noise": {
+      "createNoise": {
         "BATCH": {
           "WALLTIME": "#SBATCH --time=00:15:00",
           "MEMORY": "#SBATCH --mem=30G",
