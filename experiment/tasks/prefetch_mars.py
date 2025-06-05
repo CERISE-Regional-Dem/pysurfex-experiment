@@ -249,10 +249,10 @@ def fill_pattern(pattern, values):
 
 
 def get_info(dt):
-    return {"yyyy": dt.strftime("%Y"),
-        "mm": dt.strftime("%m"),
-        "dd": dt.strftime("%d"),
-        "hh": dt.strftime("%H"),
+    return {"@yyyy@": dt.strftime("%Y"),
+        "@mm@": dt.strftime("%m"),
+        "@dd@": dt.strftime("%d"),
+        "@hh@": dt.strftime("%H"),
         }
 
 
