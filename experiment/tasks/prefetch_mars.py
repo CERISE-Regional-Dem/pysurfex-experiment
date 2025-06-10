@@ -5,8 +5,8 @@ import datetime
 import json
 #import logging
 import yaml
-from netCDF4 import Dataset
-import numpy as np
+#from netCDF4 import Dataset
+#import numpy as np
 import subprocess
 from experiment.datetime_utils import as_datetime, as_timedelta
 from experiment.tasks import AbstractTask
@@ -66,7 +66,61 @@ class PrefetchMars(AbstractTask):
         print(dts)
         gribdir =  self.config.get_value("system.sfx_exp_data") + "/grib/"
         os.makedirs(gribdir, exist_ok=True)
-        prefetch(dts, gribdir)
+        prefetch_mars(dts, gribdir)
+
+
+class PrefetchECFS(AbstractTask):
+    """Perturb state task."""
+
+    def __init__(self, config):
+        """Construct assim task.
+
+        Args:
+            config (dict): Actual configuration dict
+
+        """
+        AbstractTask.__init__(self, config, name="PrefetchECFS")
+        self.var_name = self.config.get_value("task.var_name")
+        try:
+            user_config = self.config.get_value("task.forcing_user_config")
+        except AttributeError:
+            user_config = None
+        self.user_config = user_config
+
+    def execute(self):
+        """Execute the perturb state task.
+
+        Raises:
+            NotImplementedError: _description_
+        """
+        dtg = self.dtg
+        fcint = self.fcint
+
+        kwargs = {}
+        if self.user_config is not None:
+            user_config = yaml.safe_load(open(self.user_config, mode="r", encoding="utf-8"))
+            kwargs.update({"user_config": user_config})
+
+        with open(self.wdir + "/domain.json", mode="w", encoding="utf-8") as file_handler:
+            json.dump(self.geo.json, file_handler, indent=2)
+        kwargs.update({"domain": self.wdir + "/domain.json"})
+        
+        kwargs.update({"dtg_start": dtg.strftime("%Y%m%d%H")})
+        kwargs.update({"dtg_stop": (dtg + fcint).strftime("%Y%m%d%H")})
+        dtg0 = dtg - datetime.timedelta(hours=dtg.hour)
+        fcint = as_timedelta(self.config.get_value("general.times.cycle_length"))
+        dtend = as_datetime(self.config.get_value("general.times.end")) + fcint
+        print(dtend)
+        ntimes = int((dtend - dtg0)/datetime.timedelta(hours=24))
+        print(ntimes)
+        dts = [dtg0 + datetime.timedelta(hours=i*24) for i in range(ntimes+2)]
+        print(dts)
+        dest =  self.config.get_value("system.forcing_dir")
+        source = self.config.get_value("general.ecfs_forc_path")
+        print(dest)
+        prefetch_ecfs(dts, source, self.wdir, dest)
+
+
 
 class PrefetchMarsObs(AbstractTask):
     """Perturb state task."""
@@ -190,15 +244,15 @@ def get_validtime(gid):
 def fill_pattern(pattern, values):
     s = str(pattern)
     for key in values:
-        s = s.replace(f"@{key}@", values[key])
+        s = s.replace(f"{key}", values[key])
     return s
 
 
 def get_info(dt):
-    return {"yyyy": dt.strftime("%Y"),
-        "mm": dt.strftime("%m"),
-        "dd": dt.strftime("%d"),
-        "hh": dt.strftime("%H"),
+    return {"@yyyy@": dt.strftime("%Y"),
+        "@mm@": dt.strftime("%m"),
+        "@dd@": dt.strftime("%d"),
+        "@hh@": dt.strftime("%H"),
         }
 
 
@@ -280,7 +334,7 @@ def split_files(file_in, dest):
             info = get_info(dt)
 
             step = ec.codes_get(gid, "step")
-            info["lll"] = "%03d" % step
+            info["@lll@"] = "%03d" % step
             filename = fill_pattern(filepattern, info)
             if filename not in outputset:
                 outputset[filename] = []
@@ -294,7 +348,7 @@ def split_files(file_in, dest):
                     ec.codes_set(gid0, "hour", prev_dt.hour)
                     ec.codes_set(gid0, "date", int(prev_dt.strftime("%Y%m%d")))
                     info0 = get_info(prev_dt)
-                    info0["lll"] = "003"
+                    info0["@lll@"] = "003"
                     filename0 = fill_pattern(filepattern, info0)
                     if filename0 not in outputset:
                         outputset[filename0] = []
@@ -307,7 +361,7 @@ def split_files(file_in, dest):
                     ec.codes_set(gid0, "step", 0)
                     values = ec.codes_get_array(gid0, "values")*0
                     ec.codes_set_values(gid0, values)
-                    info["lll"] = "%03d" % 0
+                    info["@lll@"] = "%03d" % 0
                     filename0 = fill_pattern(filepattern, info)
                     if filename0 not in outputset:
                         outputset[filename0] = []
@@ -347,7 +401,46 @@ params_ml = [
     133  # q humidity
 ]
 
-def prefetch(dts, dest):  
+def prefetch_ecfs(dts, source, wdir, dest):
+    """ download data from ecfs, untar and structure """
+    print(dts)
+    print(dest)
+    ecfs_paths = []
+    for dt in dts:
+        info = {
+            "@YYYY@": dt.strftime("%Y"),
+            "@MM@": dt.strftime("%m"),
+            "@DD@": dt.strftime("%d"),
+            "@HH@": dt.strftime("%H"),
+        }
+        ecfs_paths.append(fill_pattern(source, info))
+    for ep in ecfs_paths:
+        print("download: ", ep)
+    print("pwd", os.getcwd())
+    res = subprocess.run(["ecp"] + ecfs_paths + [wdir])
+    for dt in dts:
+        print(dt)
+        res = subprocess.run(["tar", "xvf", dt.strftime("forcing_%Y%m%d00.tar")], capture_output=True, text=True)
+        extracted = res.stdout.splitlines()
+        for path in extracted:
+            if "FORCING.nc" not in path:
+                continue
+            s0 = path.replace("FORCING.nc", "")
+            print(s0)
+            dt0 = datetime.datetime.strptime(s0.split("/")[-2],"forcing_%Y%m%d%H")
+            print(dt0)
+            values = {
+                "@YYYY@": dt0.strftime("%Y"),
+                "@MM@": dt0.strftime("%m"),
+                "@DD@": dt0.strftime("%d"),
+                "@HH@": dt0.strftime("%H"),
+                "@RRR@": ""
+            }
+            print(dest, values)          
+            r0 = subprocess.run(["mv", s0, fill_pattern(dest, values)])
+
+
+def prefetch_mars(dts, dest):  
     
     #dts = [datetime.datetime(2015, 9, 8) + datetime.timedelta(hours=i*3) for i in range(8)]
     #dest = "/scratch/fab0/tmp/"
@@ -379,7 +472,6 @@ def prefetch_synop(dt, dest):
         obstype = lsd,
         date    = {date},
         time    = {time_ea},
-        area    = 90/0/60/45,
         range   = 180,
         target  = {target}'''
     else:
@@ -390,7 +482,6 @@ def prefetch_synop(dt, dest):
         date    = {date},
         time    = {time},
         range   = 180,
-        area    = 90/0/60/45,
         target  = {target}'''
         
     request_file = "request.out"
