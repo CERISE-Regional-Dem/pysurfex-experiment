@@ -393,6 +393,19 @@ class SurfexSuite:
                         triggers=triggers,
                         input_template=template,
                     )
+                    if dtg.hour == 3:
+                        makeData = EcflowSuiteTask(
+                            "MakeObsOpData",
+                            initialization,
+                            config,
+                            task_settings,
+                            ecf_files,
+                            triggers=triggers,
+                            input_template=template
+                            )
+                        triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(makeData)])
+                        obsOp = EcflowSuiteTask("ObsOp", initialization, config, task_settings, ecf_files, triggers=triggers, input_template=template)
+                    
 
 
                     perturbations = None
@@ -779,6 +792,25 @@ class SurfexSuite:
                 prep = EcflowSuiteTask("ExternalAssim", letkf, config, task_settings, ecf_files,triggers=triggers, input_template=template)
 
                 triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(prep)])
+                eps = EcflowSuiteFamily("ana_pp", dtg_node, ecf_files, triggers=triggers)
+                for m in ensmsel:
+                    logger.debug("member %s", m)
+                    name = "mbr_%03d" % m
+                    args = "pert=" + str(m) + ";name=" + name
+                    logger.debug("args: %s", args)
+                    variables = {"ARGS": args, "ENSMBR": str(m)}
+                    member = EcflowSuiteFamily(name, eps, ecf_files, variables=variables)
+                    ana_pp = EcflowSuiteTask("AssimPP", member, config, task_settings, ecf_files,input_template=template)
+                    #trigger = EcflowSuiteTriggers([EcflowSuiteTrigger(ana_pp)])
+                    #if dtg.hour == 3 and dtg != dtgbeg:
+                    #    makeData = EcflowSuiteTask("MakeObsOpData", member, config, task_settings, ecf_files, triggers=trigger, input_template=template)
+                    #    trigger = EcflowSuiteTriggers([EcflowSuiteTrigger(makeData)])
+                    #    obsOp = EcflowSuiteTask("ObsOp", member, config, task_settings, ecf_files, triggers=trigger, input_template=template)
+                    #    fg_ready += [EcflowSuiteTrigger(obsOp)]
+
+                    #trigger = EcflowSuiteTriggers([EcflowSuiteTrigger(ana_pp)])
+                    # obsop
+
             #####################
             prediction = EcflowSuiteFamily(
                 "Prediction", dtg_node, ecf_files, triggers=triggers

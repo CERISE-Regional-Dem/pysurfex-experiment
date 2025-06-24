@@ -61,8 +61,11 @@ class MakeObsOpData(AbstractTask):
                 
         csurf_filetype = self.config.get_value("SURFEX.IO.CSURF_FILETYPE").lower()
         pgdfile = self.config.get_value("system.climdir") + "/PGD." + csurf_filetype
-                
-        mbrin = "%03d" % int(mbr)
+
+        if mbr != "":
+            mbrin = "%03d" % int(mbr)
+        else:
+            mbrin = ""
 
         satpattern = self.config.get_value("observations.satpath")            
         date_start = dtg.strftime("%Y%m%d")
@@ -71,7 +74,16 @@ class MakeObsOpData(AbstractTask):
         channel_list = self.config.get_value("assim.ObsOp.channel_list")
         
         for channel_freq in channel_list:
-
-            makeData(mbrin, date_start, date_stop, pgdfile, satpattern, hofxpattern, ana_dir, sfxpattern, channel_freq)
-
+            graphpattern = f"{ana_dir.replace('@mbr@', mbrin)}/Graphs_{channel_freq.replace('.','_')}_{date_start}.h5"        
+            
+            makeData(
+                mbrin, 
+                date_start, 
+                date_stop, 
+                pgdfile=pgdfile,
+                satpattern=satpattern, 
+                hofxpattern=hofxpattern.replace("@mbr@", mbrin),
+                outpattern=graphpattern,
+                sfxpath=sfxpattern.replace("@mbr@", mbrin),
+                channel_freq=channel_freq)
 

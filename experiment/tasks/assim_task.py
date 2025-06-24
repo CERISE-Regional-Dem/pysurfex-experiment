@@ -26,7 +26,7 @@ class ExternalAssim(AbstractTask):
             config (dict): Actual configuration dict
 
         """
-        AbstractTask.__init__(self, config, name="PerturbState")
+        AbstractTask.__init__(self, config, name="ExternalAssim")
         self.var_name = self.config.get_value("task.var_name")
         try:
             user_config = self.config.get_value("task.forcing_user_config")
