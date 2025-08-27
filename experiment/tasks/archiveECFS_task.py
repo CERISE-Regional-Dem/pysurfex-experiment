@@ -70,7 +70,7 @@ class ArchiveECFS(AbstractTask):
             ntimes = int((dtg - dtstart).total_seconds()/fcint.total_seconds() + 1)
             files = []
             print("dtstart", dtstart)
-            savestate = True
+            savestate = False
             for i in range(ntimes):
                 dt = dtstart + fcint*i
                 print("dt", dt)

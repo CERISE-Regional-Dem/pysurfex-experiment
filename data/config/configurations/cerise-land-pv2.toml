@@ -7,6 +7,14 @@ archive_hours = ["00", "03", "06", "09", "12", "15", "18", "21"]
 forcing_from_mars = false
 forcing_from_ecfs = true
 ecfs_forc_path = "ec:/sbjb/CARRA2_forcing/2014_stream/forcing_@YYYY@@MM@@DD@00.tar"
+rerun = false
+
+[compile]
+####################################################################################################
+# Compilation settings
+#####################################################################################################
+cmake = true                         # Build with CMake
+build = false                        # Turn on or off the compilation and binary build (true/false)
 
 [domain]
 name = "CARRA2_2500"
@@ -100,6 +108,7 @@ coef = 0.5
 
 [assim.general]
 do_assim = true
+do_amsr2_assim = false
 hofxpath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@RRR@/SURFOUT.@YYYY_LL@@MM_LL@@DD_LL@_@HH_LL@h00.nc"
 obpath = "@sfx_exp_data@/archive/observations/@YYYY@/@MM@/@DD@/@HH@/qc_@obtype@.json"
 sfxpath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@RRR@/SURFOUT.nc"
@@ -109,22 +118,50 @@ assimilate = true
 filepath = "@sfx_exp_data@/archive/observations/@YYYY@/@MM@/@DD@/@HH@/qc_air_temperature_2m.json"
 horizontal_m = 30000
 vertical_m = 200
+obserr = 1
 
 [assim.control.observation_vector.totalSnowDepth]
 assimilate = true
 filepath = "@sfx_exp_data@/archive/observations/@YYYY@/@MM@/@DD@/@HH@/qc_surface_snow_thickness.json"
 horizontal_m = 30000
 vertical_m = 200
+obserr = 0.1
 
 [assim.control.observation_vector.AMSR2_BT18_7H]
-assimilate = true
-filepath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@mbr@/Predictions_@YYYY@@MM@@DD@.nc"
+assimilate = false
+filepath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@mbr@/Predictions_18_7_@YYYY@@MM@@DD@.nc"
 horizontal_m = 9000
+obserr = 5.0
 
 [assim.control.observation_vector.AMSR2_BT18_7V]
-assimilate = true
-filepath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@mbr@/Predictions_@YYYY@@MM@@DD@.nc"
+assimilate = false
+filepath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@mbr@/Predictions_18_7_@YYYY@@MM@@DD@.nc"
 horizontal_m = 9000
+obserr = 5.0
+
+[assim.control.observation_vector.AMSR2_BT10_7H]
+assimilate = false
+filepath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@mbr@/Predictions_10_7_@YYYY@@MM@@DD@.nc"
+horizontal_m = 16500
+obserr = 5.0
+
+[assim.control.observation_vector.AMSR2_BT10_7V]
+assimilate = false
+filepath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@mbr@/Predictions_10_7_@YYYY@@MM@@DD@.nc"
+horizontal_m = 16500
+obserr = 5.0
+
+[assim.control.observation_vector.AMSR2_BT36_5H]
+assimilate = false
+filepath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@mbr@/Predictions_36_5_@YYYY@@MM@@DD@.nc"
+horizontal_m = 4750
+obserr = 5.0
+
+[assim.control.observation_vector.AMSR2_BT36_5V]
+assimilate = false
+filepath = "@sfx_exp_data@/archive/@YYYY@/@MM@/@DD@/@HH@/@mbr@/Predictions_36_5_@YYYY@@MM@@DD@.nc"
+horizontal_m = 4750
+obserr = 5.0
 
 [assim.control.control_vector."WSN_VEG@level@"]
 assimilate = true
@@ -223,7 +260,7 @@ TEB = "NONE"                        # Assimilation method for TEB tile: "NONE"|"
 [SURFEX.TILES]
 SEA = "NONE"
 TOWN = "NONE"
-INLAND_WATER = "NONE"
+INLAND_WATER = "FLAKE"
 NATURE = "ISBA"
 
 [SURFEX.ASSIM.ISBA.EKF]

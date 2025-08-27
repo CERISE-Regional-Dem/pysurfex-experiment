@@ -614,6 +614,14 @@ class SurfexSuite:
                                         cryo2json_complete,
                                     ]
                                 )
+                            elif var == "t2m":         
+                                qc_triggers = EcflowSuiteTriggers(
+                                    [
+                                        fg4oi_complete,
+                                        fetchobs_complete,
+                                        cryo2json_complete,
+                                    ]
+                                )
                             else:
                                 qc_triggers = EcflowSuiteTriggers(fetchobs_complete)
                             qc_task = EcflowSuiteTask(
@@ -765,11 +773,13 @@ class SurfexSuite:
                             EcflowSuiteTask("PerturbState", pert, config, task_settings, ecf_files,triggers=triggers, input_template=template)
 
                         # TODO remove hardcoding, and add switch?
-                        if dtg.hour == 3 and dtg != dtgbeg:
-                            makeData = EcflowSuiteTask("MakeObsOpData", pert, config, task_settings, ecf_files, triggers=trigger, input_template=template)
-                            trigger = EcflowSuiteTriggers([EcflowSuiteTrigger(makeData)])
-                            obsOp = EcflowSuiteTask("ObsOp", pert, config, task_settings, ecf_files, triggers=trigger, input_template=template)
-                            fg_ready += [EcflowSuiteTrigger(obsOp)]
+                        if config.get_value("assim.general.do_amsr2_assim") == True and dtg > dtgbeg:
+
+                            if dtg.hour == 3 and dtg != dtgbeg:
+                                makeData = EcflowSuiteTask("MakeObsOpData", pert, config, task_settings, ecf_files, triggers=trigger, input_template=template)
+                                trigger = EcflowSuiteTriggers([EcflowSuiteTrigger(makeData)])
+                                obsOp = EcflowSuiteTask("ObsOp", pert, config, task_settings, ecf_files, triggers=trigger, input_template=template)
+                                fg_ready += [EcflowSuiteTrigger(obsOp)]
 
                 triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(ens_prep)])
             
@@ -778,7 +788,7 @@ class SurfexSuite:
                 letkf = EcflowSuiteFamily("LETKF", dtg_node, ecf_files, triggers=triggers)
                 prep = EcflowSuiteTask("ExternalAssim", letkf, config, task_settings, ecf_files,triggers=triggers, input_template=template)
 
-                triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(prep)])
+                triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(prep), EcflowSuiteTrigger(ens_prep)])
             #####################
             prediction = EcflowSuiteFamily(
                 "Prediction", dtg_node, ecf_files, triggers=triggers

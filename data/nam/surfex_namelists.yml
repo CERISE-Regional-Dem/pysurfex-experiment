@@ -7803,6 +7803,25 @@ offline_selected_output:
     - LWDC_ISBA
     - LWUC_ISBA
     - RNC_ISBA
+    - TC
+    - LAI
+    - Z0
+    - TS_WAT
+    - T2M_WAT
+    - Q2M_WAT
+    - LEC_WAT
+    - HC_WAT
+    - SWUC_WAT
+    - LWDC_WAT
+    - LWUC_WAT
+    - RNC_WAT
+    - TALB_WAT
+    - T_SNOW
+    - T_ICE
+    - H_SNOW
+    - H_ICE
+    - T_WML
+    - H_ML
     LSELECT: true
 
 # SODA

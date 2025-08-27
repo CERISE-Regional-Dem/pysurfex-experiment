@@ -62,13 +62,27 @@ class ObsOp(AbstractTask):
         pgdfile = self.config.get_value("system.climdir") + "/PGD." + csurf_filetype
         print("PGD:", pgdfile)
 
-        mbrin = "%03d" % int(mbr)        
+        if mbr != "":
+            mbrin = "%03d" % int(mbr)
+        else:
+            mbrin = ""
+        
         date_start = dtg.strftime("%Y%m%d")
         date_stop = date_start
 
         channel_list = self.config.get_value("assim.ObsOp.channel_list") #["18.7"] #["10.7", "18.7", "36.5"]
         
         for channel_freq in channel_list:
-
-            run_GNN(mbrin, date_start, date_stop, ana_dir, pgdfile, normdir, modeldir, channel_freq)
-
+            graphpattern = f"{ana_dir.replace('@mbr@', mbrin)}/Graphs_{channel_freq.replace('.','_')}_{date_start}.h5"
+            predictionpattern = f"{ana_dir.replace('@mbr@', mbrin)}/Predictions_{channel_freq.replace('.','_')}_{date_start}.nc"
+            run_GNN(    
+                mbrin,
+                date_start,
+                date_stop,
+                inputfile=graphpattern,
+                outputfile=predictionpattern,
+                pgdfile=pgdfile,
+                normdir=normdir,
+                modeldir=modeldir,
+                channel_freq=channel_freq
+                )
