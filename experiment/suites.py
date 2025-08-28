@@ -803,15 +803,16 @@ class SurfexSuite:
                 prep = EcflowSuiteTask("ExternalAssim", letkf, config, task_settings, ecf_files,triggers=triggers, input_template=template)
 
                 triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(prep)])
-                eps = EcflowSuiteFamily("ana_pp", dtg_node, ecf_files, triggers=triggers)
-                for m in ensmsel:
-                    logger.debug("member %s", m)
-                    name = "mbr_%03d" % m
-                    args = "pert=" + str(m) + ";name=" + name
-                    logger.debug("args: %s", args)
-                    variables = {"ARGS": args, "ENSMBR": str(m)}
-                    member = EcflowSuiteFamily(name, eps, ecf_files, variables=variables)
-                    ana_pp = EcflowSuiteTask("AssimPP", member, config, task_settings, ecf_files,input_template=template)
+                if config.get_value("assim.general.do_amsr2_assim") == True and dtg > dtgbeg: 
+                    eps = EcflowSuiteFamily("ana_pp", dtg_node, ecf_files, triggers=triggers)
+                    for m in ensmsel:
+                        logger.debug("member %s", m)
+                        name = "mbr_%03d" % m
+                        args = "pert=" + str(m) + ";name=" + name
+                        logger.debug("args: %s", args)
+                        variables = {"ARGS": args, "ENSMBR": str(m)}
+                        member = EcflowSuiteFamily(name, eps, ecf_files, variables=variables)
+                        ana_pp = EcflowSuiteTask("AssimPP", member, config, task_settings, ecf_files,input_template=template)
                     #trigger = EcflowSuiteTriggers([EcflowSuiteTrigger(ana_pp)])
                     #if dtg.hour == 3 and dtg != dtgbeg:
                     #    makeData = EcflowSuiteTask("MakeObsOpData", member, config, task_settings, ecf_files, triggers=trigger, input_template=template)
