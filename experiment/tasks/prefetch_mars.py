@@ -118,7 +118,7 @@ class PrefetchECFS(AbstractTask):
         dest =  self.config.get_value("system.forcing_dir")
         source = self.config.get_value("general.ecfs_forc_path")
         print(dest)
-        prefetch_ecfs(dts, source, self.wdir, dest)
+        prefetch_ecfs([dtg], source, self.wdir, dest)
 
 
 
