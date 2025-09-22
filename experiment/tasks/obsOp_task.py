@@ -6,7 +6,7 @@ import json
 import yaml
 from netCDF4 import Dataset
 import numpy as np
-from obsOp.Predictions import run_GNN
+#from obsOp.Predictions import run_GNN
 from experiment.tasks import AbstractTask
 
 class ObsOp(AbstractTask):

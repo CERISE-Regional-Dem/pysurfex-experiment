@@ -6,7 +6,7 @@ import json
 import yaml
 from netCDF4 import Dataset
 import numpy as np
-from obsOp.Training_data_static import makeData
+#from obsOp.Training_data_static import makeData
 from experiment.tasks import AbstractTask
 
 class MakeObsOpData(AbstractTask):
