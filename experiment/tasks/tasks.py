@@ -304,7 +304,9 @@ class QualityControl(AbstractTask):
             if synop_obs:
                 bufr_tests = default_tests
                 bufr_tests.update(
-                    {"plausibility": {"do_test": True, "maxval": 340, "minval": 200}}
+                    {"plausibility": {"do_test": True, "maxval": 340, "minval": 200},
+                    "firstguess": {"do_test": True, "negdiff": 10., "posdiff": 10.},
+                    }
                 )
                 filepattern = self.obsdir + "/ob@YYYY@@MM@@DD@@HH@"
                 data_sets.update(

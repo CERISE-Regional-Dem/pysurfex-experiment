@@ -283,17 +283,17 @@ class SurfexSuite:
                         input_template=template,
                         def_status=skip_because_forcing_exist
                     )
-                elif config.get_value("general.forcing_from_ecfs"):
-                    prefetch = EcflowSuiteTask(
-                        "PrefetchECFS",
-                        cycle_input,
-                        config,
-                        task_settings,
-                        ecf_files,
-                        input_template=template,
-                        def_status=skip_because_forcing_exist
-                    )
 
+            if config.get_value("general.forcing_from_ecfs"):
+               prefetch = EcflowSuiteTask(
+                    "PrefetchECFS",
+                    cycle_input,
+                    config,
+                    task_settings,
+                    ecf_files,
+                    input_template=template,
+                    def_status=skip_because_forcing_exist
+               )
             if prefetch is not None:
                 grib_fetched =  EcflowSuiteTriggers([EcflowSuiteTrigger(prefetch)])
                 next_forcing = grib_fetched if next_forcing is None else next_forcing
@@ -713,7 +713,7 @@ class SurfexSuite:
             #    [EcflowSuiteTrigger(cycle_input), EcflowSuiteTrigger(initialization)]
             #)
             triggers = EcflowSuiteTriggers(
-                [EcflowSuiteTrigger(cycle_input)]
+                [EcflowSuiteTrigger(cycle_input),EcflowSuiteTrigger(prefetch)]
             )
            ##### WROK HERE #####
             ensmsel = config.get_value("forecast.ensmsel")
@@ -836,8 +836,22 @@ class SurfexSuite:
             #obs_extract = EcflowSuiteTask("ObsExtract", pp_fam, config, task_settings, ecf_files,input_template=template)
             fgint = settings.get_fgint(realization=realization)
 
+            if config.get_value("general.post_process_files"):
+                postProcessFiles = EcflowSuiteTask(
+                    "postProcessFiles",
+                    pp_fam,
+                    config,
+                    task_settings,
+                    ecf_files,                    
+                    input_template=template,
+                )
+#                trigger = EcflowSuiteTrigger(postProcessFiles)
+                triggers_post = EcflowSuiteTriggers([EcflowSuiteTrigger(postProcessFiles)])
+
             #if len(ensmsel) > 0:
-            if config.get_value("general.arhive_ecfs") and (dtg + fgint).strftime("%w%H") == "000":
+            #if config.get_value("general.arhive_ecfs") and (dtg + fgint).strftime("%w%H") == "000":
+            day_of_year = (dtg).timetuple().tm_yday
+            if ( (config.get_value("general.arhive_ecfs")) and (day_of_year % 3 == 0) and (dtg.hour in {21})):
                 eps = EcflowSuiteFamily("ens_pp", pp_fam, ecf_files)
                 for m in ensmsel:
                     logger.debug("member %s", m)
@@ -849,7 +863,8 @@ class SurfexSuite:
                     #obs_extract = EcflowSuiteTask("ObsExtract", member, config, task_settings, ecf_files,input_template=template)
                     #triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(obs_extract), EcflowSuiteTrigger(member)])
                     #if config.get_value("general.arhive_ecfs") and (dtg + fgint).strftime("%w%H") == "000":
-                    archive_ecfs = EcflowSuiteTask("ArchiveECFS", member, config, task_settings, ecf_files,input_template=template)
+                    archive_ecfs = EcflowSuiteTask("ArchiveECFS", member, config, task_settings, ecf_files,input_template=template, triggers=triggers_post)
+                    #triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(archive_ecfs), EcflowSuiteTrigger(member)])
                     triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(archive_ecfs), EcflowSuiteTrigger(member)])
             if ((analysis is not None) and (config.get_value("assim.general.do_assim") == False)):
                 qc2obsmon = EcflowSuiteTask(
@@ -862,9 +877,20 @@ class SurfexSuite:
                 )
                 trigger = EcflowSuiteTrigger(qc2obsmon)
                 log_pp_trigger = EcflowSuiteTriggers(trigger)
-            if config.get_value("general.arhive_ecfs") and (dtg + fgint).strftime("%w%H") == "000":
-                archive_ecfs = EcflowSuiteTask("ArchiveECFS", pp_fam, config, task_settings, ecf_files,input_template=template)
+            #if config.get_value("general.arhive_ecfs") and (dtg + fgint).strftime("%w%H") == "000":
+            if ( (config.get_value("general.arhive_ecfs")) and (day_of_year % 3 == 0) and (dtg.hour in {21})):                        
+                archive_ecfs = EcflowSuiteTask("ArchiveECFS", pp_fam, config, task_settings, ecf_files,input_template=template, triggers=triggers_post)
 
+#            if config.get_value("general.post_process_files"):
+#                postProcessFiles = EcflowSuiteTask(
+#                    "postProcessFiles",
+#                    pp_fam,
+#                    config,
+#                    task_settings,
+#                    ecf_files,                    
+#                    input_template=template,
+#                )
+#                trigger = EcflowSuiteTrigger(postProcessFiles)            
 
             EcflowSuiteTask(
                 "LogProgressPP",
