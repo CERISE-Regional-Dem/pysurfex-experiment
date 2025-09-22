@@ -393,6 +393,20 @@ class SurfexSuite:
                         triggers=triggers,
                         input_template=template,
                     )
+                    # for control
+                    if config.get_value("assim.general.do_amsr2_assim") == True and dtg > dtgbeg:
+                        makeData = EcflowSuiteTask(
+                            "MakeObsOpData",
+                            initialization,
+                            config,
+                            task_settings,
+                            ecf_files,
+                            triggers=triggers,
+                            input_template=template
+                            )
+                        triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(makeData)])
+                        obsOp = EcflowSuiteTask("ObsOp", initialization, config, task_settings, ecf_files, triggers=triggers, input_template=template)
+                    
 
 
                     perturbations = None
@@ -788,7 +802,27 @@ class SurfexSuite:
                 letkf = EcflowSuiteFamily("LETKF", dtg_node, ecf_files, triggers=triggers)
                 prep = EcflowSuiteTask("ExternalAssim", letkf, config, task_settings, ecf_files,triggers=triggers, input_template=template)
 
-                triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(prep), EcflowSuiteTrigger(ens_prep)])
+                triggers = EcflowSuiteTriggers([EcflowSuiteTrigger(prep)])
+                if config.get_value("assim.general.do_amsr2_assim") == True and dtg > dtgbeg: 
+                    eps = EcflowSuiteFamily("ana_pp", dtg_node, ecf_files, triggers=triggers)
+                    for m in ensmsel:
+                        logger.debug("member %s", m)
+                        name = "mbr_%03d" % m
+                        args = "pert=" + str(m) + ";name=" + name
+                        logger.debug("args: %s", args)
+                        variables = {"ARGS": args, "ENSMBR": str(m)}
+                        member = EcflowSuiteFamily(name, eps, ecf_files, variables=variables)
+                        ana_pp = EcflowSuiteTask("AssimPP", member, config, task_settings, ecf_files,input_template=template)
+                    #trigger = EcflowSuiteTriggers([EcflowSuiteTrigger(ana_pp)])
+                    #if dtg.hour == 3 and dtg != dtgbeg:
+                    #    makeData = EcflowSuiteTask("MakeObsOpData", member, config, task_settings, ecf_files, triggers=trigger, input_template=template)
+                    #    trigger = EcflowSuiteTriggers([EcflowSuiteTrigger(makeData)])
+                    #    obsOp = EcflowSuiteTask("ObsOp", member, config, task_settings, ecf_files, triggers=trigger, input_template=template)
+                    #    fg_ready += [EcflowSuiteTrigger(obsOp)]
+
+                    #trigger = EcflowSuiteTriggers([EcflowSuiteTrigger(ana_pp)])
+                    # obsop
+
             #####################
             prediction = EcflowSuiteFamily(
                 "Prediction", dtg_node, ecf_files, triggers=triggers
@@ -877,6 +911,7 @@ class SurfexSuite:
                 )
                 trigger = EcflowSuiteTrigger(qc2obsmon)
                 log_pp_trigger = EcflowSuiteTriggers(trigger)
+
             #if config.get_value("general.arhive_ecfs") and (dtg + fgint).strftime("%w%H") == "000":
             if ( (config.get_value("general.arhive_ecfs")) and (day_of_year % 3 == 0) and (dtg.hour in {21})):                        
                 archive_ecfs = EcflowSuiteTask("ArchiveECFS", pp_fam, config, task_settings, ecf_files,input_template=template, triggers=triggers_post)
@@ -891,6 +926,17 @@ class SurfexSuite:
 #                    input_template=template,
 #                )
 #                trigger = EcflowSuiteTrigger(postProcessFiles)            
+
+            if config.get_value("assim.general.do_assim") == True:
+                EcflowSuiteTask(
+                    "AnalysisMonitoring",
+                    pp_fam,
+                    config,
+                    task_settings,
+                    ecf_files,
+                    triggers=EcflowSuiteTriggers(EcflowSuiteTrigger(letkf)),
+                    input_template=template,
+                )
 
             EcflowSuiteTask(
                 "LogProgressPP",
