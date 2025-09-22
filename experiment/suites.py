@@ -899,6 +899,16 @@ class SurfexSuite:
             if config.get_value("general.arhive_ecfs") and (dtg + fgint).strftime("%w%H") == "000":
                 archive_ecfs = EcflowSuiteTask("ArchiveECFS", pp_fam, config, task_settings, ecf_files,input_template=template)
 
+            if config.get_value("assim.general.do_assim") == True:
+                EcflowSuiteTask(
+                    "AnalysisMonitoring",
+                    pp_fam,
+                    config,
+                    task_settings,
+                    ecf_files,
+                    triggers=EcflowSuiteTriggers(EcflowSuiteTrigger(letkf)),
+                    input_template=template,
+                )
 
             EcflowSuiteTask(
                 "LogProgressPP",
